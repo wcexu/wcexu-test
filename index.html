@@ -6,9 +6,6 @@
     <title>Username Market</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           ROOT VARIABLES
-           ============================================================ */
         :root {
             --bg-primary: #0a0a0f;
             --bg-secondary: #12121a;
@@ -35,9 +32,6 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ============================================================
-           RESET & BASE
-           ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -55,9 +49,6 @@
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-        /* ============================================================
-           HEADER
-           ============================================================ */
         .header {
             display: flex;
             align-items: center;
@@ -149,9 +140,6 @@
 
         .refresh-btn:active { transform: scale(0.95); }
 
-        /* ============================================================
-           SERVER SETTINGS
-           ============================================================ */
         .server-settings {
             display: flex;
             gap: 10px;
@@ -205,9 +193,6 @@
             border: 1px solid rgba(255, 107, 107, 0.3);
         }
 
-        /* ============================================================
-           TABS
-           ============================================================ */
         .tabs {
             display: flex;
             gap: 6px;
@@ -248,9 +233,6 @@
             color: var(--text-primary);
         }
 
-        /* ============================================================
-           STATS
-           ============================================================ */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -290,9 +272,6 @@
         .stat-card .value.warning { color: var(--warning); }
         .stat-card .value.danger { color: var(--danger); }
 
-        /* ============================================================
-           CHANNEL LIST
-           ============================================================ */
         .channel-list {
             display: flex;
             flex-direction: column;
@@ -369,7 +348,6 @@
             color: var(--text-primary);
         }
 
-        /* Badges */
         .badge {
             padding: 3px 12px;
             border-radius: 12px;
@@ -403,9 +381,6 @@
             border: 1px solid rgba(108, 92, 231, 0.3);
         }
 
-        /* ============================================================
-           EMPTY STATE
-           ============================================================ */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -445,9 +420,6 @@
 
         .retry-btn:active { transform: scale(0.95); }
 
-        /* ============================================================
-           BOTTOM NAVIGATION
-           ============================================================ */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -500,9 +472,6 @@
             text-align: center;
         }
 
-        /* ============================================================
-           LOADING
-           ============================================================ */
         .loading {
             display: flex;
             justify-content: center;
@@ -521,9 +490,6 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ============================================================
-           TOAST
-           ============================================================ */
         .toast {
             position: fixed;
             top: 20px;
@@ -551,9 +517,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ============================================================
-           MODALS
-           ============================================================ */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -685,9 +648,6 @@
             color: var(--text-primary);
         }
 
-        /* ============================================================
-           PROFILE - УЛУЧШЕННЫЙ
-           ============================================================ */
         .profile-card {
             background: var(--bg-secondary);
             border-radius: var(--radius);
@@ -857,9 +817,6 @@
             font-size: 18px;
         }
 
-        /* ============================================================
-           DEALS
-           ============================================================ */
         .deal-card {
             background: var(--bg-secondary);
             border-radius: var(--radius-sm);
@@ -926,9 +883,6 @@
             color: var(--warning);
         }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
         @media (max-width: 480px) {
             body { padding: 12px; padding-bottom: 80px; }
             
@@ -999,14 +953,8 @@
 </head>
 <body>
 
-    <!-- ============================================================
-    TOAST
-    ============================================================ -->
     <div class="toast" id="toast"></div>
 
-    <!-- ============================================================
-    HEADER
-    ============================================================ -->
     <header class="header">
         <div class="header-left">
             <div>
@@ -1024,9 +972,6 @@
         </div>
     </header>
 
-    <!-- ============================================================
-    SERVER SETTINGS
-    ============================================================ -->
     <div class="server-settings">
         <select id="serverSelect" class="server-selector" onchange="changeServer()">
             <option value="http://localhost:8080">🖥️ Локальный сервер</option>
@@ -1036,9 +981,6 @@
         <span id="statusIndicator" class="connection-status status-online">✅ Онлайн</span>
     </div>
 
-    <!-- ============================================================
-    TABS
-    ============================================================ -->
     <div class="tabs" id="tabsContainer">
         <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📊 Все</button>
         <button class="tab-btn" data-tab="fixed" onclick="switchTab('fixed')">📢 Фикс</button>
@@ -1048,9 +990,6 @@
         <button class="tab-btn" data-tab="deals" onclick="switchTab('deals')">📦 Сделки</button>
     </div>
 
-    <!-- ============================================================
-    STATS
-    ============================================================ -->
     <div class="stats-row" id="statsRow">
         <div class="stat-card">
             <div class="label">Всего</div>
@@ -1066,18 +1005,10 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    CONTENT
-    ============================================================ -->
     <div id="channelList">
         <div class="loading"><div class="spinner"></div></div>
     </div>
 
-    <!-- ============================================================
-    MODALS
-    ============================================================ -->
-
-    <!-- BID MODAL -->
     <div class="modal-overlay" id="bidModal">
         <div class="modal">
             <div class="modal-title">🔨 Сделать ставку</div>
@@ -1090,7 +1021,6 @@
         </div>
     </div>
 
-    <!-- BUY MODAL -->
     <div class="modal-overlay" id="buyModal">
         <div class="modal">
             <div class="modal-title">📢 Подтверждение покупки</div>
@@ -1102,7 +1032,6 @@
         </div>
     </div>
 
-    <!-- TRANSFER MODAL -->
     <div class="modal-overlay" id="transferModal">
         <div class="modal">
             <div class="modal-title">📦 Проверка передачи</div>
@@ -1114,9 +1043,6 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    BOTTOM NAVIGATION
-    ============================================================ -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('all')">
             <span class="nav-icon">📊</span>
@@ -1198,24 +1124,14 @@
             var tg = window.Telegram?.WebApp;
             var user_id = null;
             var username = null;
-            var first_name = null;
-            var last_name = null;
             
             if (tg && tg.initDataUnsafe?.user) {
                 user_id = tg.initDataUnsafe.user.id;
-                username = tg.initDataUnsafe.user.username || null;
-                first_name = tg.initDataUnsafe.user.first_name || null;
-                last_name = tg.initDataUnsafe.user.last_name || null;
+                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || null;
                 console.log('👤 Авторизация через Telegram:', user_id, username);
             } else {
-                // Для теста в браузере - запрашиваем ID
-                var input = prompt('👤 Введите ваш Telegram ID:');
-                if (input) {
-                    user_id = parseInt(input);
-                } else {
-                    showToast('⚠️ Используется тестовый режим');
-                    user_id = 8102526978;
-                }
+                showToast('❌ Откройте приложение через Telegram', 5000);
+                throw new Error('Not in Telegram WebApp');
             }
 
             if (!user_id) {
@@ -1229,9 +1145,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         user_id: user_id,
-                        username: username,
-                        first_name: first_name,
-                        last_name: last_name
+                        username: username
                     })
                 });
                 
@@ -1246,7 +1160,7 @@
                         avatarData = data.user.avatar;
                     }
                     
-                    showToast('✅ Авторизация выполнена для ID: ' + user_id);
+                    showToast('✅ Авторизация выполнена', 2000);
                     return data.token;
                 } else {
                     showToast('❌ Ошибка авторизации: ' + data.error);
@@ -1425,10 +1339,6 @@
             }
         }
 
-        // ============================================================
-        // UPDATE UI
-        // ============================================================
-
         function updateBalance(balance) {
             document.getElementById('balanceDisplay').textContent = balance;
         }
@@ -1466,10 +1376,6 @@
             }
         }
 
-        // ============================================================
-        // RENDER PROFILE
-        // ============================================================
-
         function renderProfile() {
             var container = document.getElementById('channelList');
             
@@ -1489,12 +1395,12 @@
             var avatarLetter = 'U';
             
             if (avatarData) {
-                avatarStyle = `background: ${avatarData.background};`;
+                avatarStyle = 'background: ' + avatarData.background + ';';
                 avatarLetter = avatarData.letter;
             } else {
                 var colors = ['#6c5ce7', '#00b894', '#fdcb6e', '#ff6b6b', '#0984e3', '#e17055'];
                 var color = colors[userData.id % colors.length];
-                avatarStyle = `background: linear-gradient(135deg, ${color}, ${color}dd);`;
+                avatarStyle = 'background: linear-gradient(135deg, ' + color + ', ' + color + 'dd);';
                 avatarLetter = (displayName || 'U')[0].toUpperCase();
             }
             
@@ -1562,10 +1468,6 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // RENDER DEALS
-        // ============================================================
-
         function renderDeals() {
             var container = document.getElementById('channelList');
             
@@ -1613,10 +1515,6 @@
             html += '</div>';
             container.innerHTML = html;
         }
-
-        // ============================================================
-        // RENDER CHANNELS
-        // ============================================================
 
         function renderChannels(channelsList, title) {
             title = title || '';
@@ -1730,10 +1628,6 @@
             }
         }
 
-        // ============================================================
-        // TAB SWITCHING
-        // ============================================================
-
         function switchTab(tab) {
             currentTab = tab;
             
@@ -1762,10 +1656,6 @@
             renderCurrentTab();
         }
 
-        // ============================================================
-        // VIEW CHANNEL
-        // ============================================================
-
         function viewChannel(channelId) {
             var channel = null;
             for (var i = 0; i < channels.length; i++) {
@@ -1786,10 +1676,6 @@
                 openBuyModal(channel);
             }
         }
-
-        // ============================================================
-        // BUY MODAL
-        // ============================================================
 
         function openBuyModal(channel) {
             currentChannelId = channel.id;
@@ -1832,10 +1718,6 @@
                 showToast('❌ ' + error.message);
             }
         }
-
-        // ============================================================
-        // BID MODAL
-        // ============================================================
 
         function openBidModal(channel) {
             currentChannelId = channel.id;
@@ -1884,10 +1766,6 @@
             }
         }
 
-        // ============================================================
-        // TRANSFER MODAL
-        // ============================================================
-
         function openTransferModal(dealId) {
             currentDealId = dealId;
             
@@ -1895,7 +1773,7 @@
                 '📦 <strong>Сделка #' + dealId + '</strong><br><br>' +
                 '✅ Оплата прошла успешно!<br>' +
                 '⏳ Ожидайте, пока продавец передаст вам канал.<br><br>' +
-                '📌 После получения канала нажмите кнопку "Подтвердить передачу".<br><br>' +
+                '📌 После получения канала нажмите "Подтвердить передачу".<br><br>' +
                 '⏰ Время на передачу: <strong>24 часа</strong><br>' +
                 '💡 Если продавец не передаст канал, деньги вернутся на баланс.';
             
@@ -1964,10 +1842,6 @@
             }
         }
 
-        // ============================================================
-        // OPEN BOT
-        // ============================================================
-
         function openBot() {
             if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.openTelegramLink(BOT_URL);
@@ -1980,9 +1854,8 @@
         // INIT
         // ============================================================
 
-        console.log('🌟 Username Market - Release Version');
+        console.log('🌟 Username Market');
         console.log('📡 API URL:', getApiUrl());
-        console.log('🤖 Bot:', BOT_URL);
 
         document.addEventListener('DOMContentLoaded', function() {
             var select = document.getElementById('serverSelect');
@@ -2015,18 +1888,24 @@
                         <div class="empty-state">
                             <div class="icon">🔑</div>
                             <div class="title">Требуется авторизация</div>
-                            <div class="subtitle">Пожалуйста, войдите в аккаунт</div>
+                            <div class="subtitle">Пожалуйста, войдите в аккаунт через Telegram</div>
                             <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
                         </div>
                     `;
                 }
             } catch (error) {
                 console.error('Init error:', error);
-                showToast('❌ Ошибка инициализации');
+                document.getElementById('channelList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚠️</div>
+                        <div class="title">Ошибка инициализации</div>
+                        <div class="subtitle">${error.message || 'Попробуйте обновить страницу'}</div>
+                        <button class="retry-btn" onclick="location.reload()">🔄 Обновить</button>
+                    </div>
+                `;
             }
         })();
 
-        // Автообновление каждые 30 секунд
         setInterval(function() {
             if (currentTab === 'profile' || currentTab === 'deals') {
                 (async function() {
@@ -2053,7 +1932,6 @@
             }
         }, 30000);
 
-        // Закрываем модалки по клику вне
         document.getElementById('bidModal').addEventListener('click', function(e) {
             if (e.target === this) closeBidModal();
         });
