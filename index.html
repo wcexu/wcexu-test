@@ -2,1947 +2,1779 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Username Market</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a2e;
-            --bg-card-hover: #22223a;
-            --bg-input: #1a1a2e;
-            --text-primary: #ffffff;
-            --text-secondary: #8899aa;
-            --text-muted: #556677;
-            --accent: #6c5ce7;
-            --accent-hover: #7d6ff0;
-            --accent-glow: rgba(108, 92, 231, 0.3);
-            --success: #00b894;
-            --success-glow: rgba(0, 184, 148, 0.3);
-            --danger: #ff6b6b;
-            --warning: #fdcb6e;
-            --border: #2a2a3e;
-            --border-light: #3a3a5e;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 40px rgba(108, 92, 231, 0.15);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-xl: 24px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        :root {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --primary: #0f3460;
+            --accent: #e94560;
+            --success: #00d2ff;
+            --text: #ffffff;
+            --text-secondary: #a0aec0;
+            --border: #2d3748;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-color);
+            color: var(--text);
             min-height: 100vh;
             padding: 16px;
-            padding-bottom: 90px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 80px;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        body.tg-theme {
+            --bg-color: var(--tg-theme-bg-color, #1a1a2e);
+            --card-bg: var(--tg-theme-secondary-bg-color, #16213e);
+            --text: var(--tg-theme-text-color, #ffffff);
+            --text-secondary: var(--tg-theme-hint-color, #a0aec0);
+            --border: var(--tg-theme-section-border-color, #2d3748);
+        }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 0 16px 0;
+            padding: 12px 0;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 16px;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-logo {
-            font-size: 22px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent), #a29bfe);
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .header-logo-sub {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            -webkit-text-fill-color: var(--text-secondary);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .header-balance {
-            display: flex;
-            align-items: center;
+            background: var(--card-bg);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .header-balance span {
+            color: var(--success);
+        }
+
+        .nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
-            background: var(--bg-secondary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
+            margin-bottom: 20px;
         }
 
-        .header-balance:hover {
-            border-color: var(--accent);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .header-balance .star { font-size: 16px; }
-        .header-balance .amount { color: var(--warning); }
-
-        .header-balance .badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 8px;
-            height: 8px;
-            background: var(--danger);
-            border-radius: 50%;
-            border: 2px solid var(--bg-primary);
-        }
-
-        .refresh-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+        .nav-btn {
+            background: var(--card-bg);
+            border: none;
             color: var(--text-secondary);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .refresh-btn:hover {
-            border-color: var(--accent);
-            color: var(--text-primary);
-        }
-
-        .refresh-btn:active { transform: scale(0.95); }
-
-        .server-settings {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .server-selector {
-            flex: 1;
-            min-width: 180px;
-            padding: 10px 14px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 13px;
+            padding: 12px 4px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
-            transition: var(--transition);
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238899aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            text-align: center;
+            border: 1px solid transparent;
         }
 
-        .server-selector:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .connection-status {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .status-online {
-            background: rgba(0, 184, 148, 0.15);
-            color: var(--success);
-            border: 1px solid rgba(0, 184, 148, 0.3);
-        }
-
-        .status-offline {
-            background: rgba(255, 107, 107, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 16px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            padding: 4px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .tabs::-webkit-scrollbar { display: none; }
-
-        .tab-btn {
-            flex: 1;
-            min-width: 56px;
-            padding: 10px 14px;
-            border: none;
-            border-radius: 8px;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .tab-btn.active {
-            background: var(--accent);
-            color: #fff;
-            box-shadow: 0 4px 16px var(--accent-glow);
-        }
-
-        .tab-btn:not(.active):hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .stat-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            padding: 14px 16px;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            border-color: var(--border-light);
-        }
-
-        .stat-card .label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-
-        .stat-card .value {
+        .nav-btn .icon {
             font-size: 20px;
-            font-weight: 800;
-            margin-top: 2px;
-            letter-spacing: -0.5px;
+            display: block;
+            margin-bottom: 4px;
         }
 
-        .stat-card .value.accent { color: var(--accent); }
-        .stat-card .value.success { color: var(--success); }
-        .stat-card .value.warning { color: var(--warning); }
-        .stat-card .value.danger { color: var(--danger); }
-
-        .channel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .channel-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            padding: 16px 18px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            animation: slideUp 0.4s ease forwards;
-            opacity: 0;
-        }
-
-        .channel-card:nth-child(1) { animation-delay: 0.05s; }
-        .channel-card:nth-child(2) { animation-delay: 0.10s; }
-        .channel-card:nth-child(3) { animation-delay: 0.15s; }
-        .channel-card:nth-child(4) { animation-delay: 0.20s; }
-        .channel-card:nth-child(5) { animation-delay: 0.25s; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .channel-card:hover {
+        .nav-btn.active {
+            color: var(--text);
             border-color: var(--accent);
-            background: var(--bg-card-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-glow);
+            background: var(--primary);
         }
 
-        .channel-card:active { transform: scale(0.98); }
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
 
-        .channel-card .title {
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-title {
             font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 2px;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        .channel-card .username {
+        .card-subtitle {
             font-size: 13px;
             color: var(--text-secondary);
             margin-bottom: 8px;
         }
 
-        .channel-card .meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            flex-wrap: wrap;
-        }
-
-        .channel-card .meta .price {
-            color: var(--warning);
+        .card-price {
+            font-size: 18px;
             font-weight: 700;
-            font-size: 15px;
-        }
-
-        .channel-card .bid-info {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 6px;
-            padding-top: 6px;
-            border-top: 1px solid var(--border);
-        }
-
-        .channel-card .bid-info strong {
-            color: var(--text-primary);
-        }
-
-        .badge {
-            padding: 3px 12px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .badge.fixed { 
-            background: rgba(0, 184, 148, 0.15); 
             color: var(--success);
-            border: 1px solid rgba(0, 184, 148, 0.3);
         }
 
-        .badge.auction { 
-            background: rgba(253, 203, 110, 0.15); 
-            color: var(--warning);
-            border: 1px solid rgba(253, 203, 110, 0.3);
-        }
-
-        .badge.sold { 
-            background: rgba(255, 107, 107, 0.15); 
-            color: var(--danger);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-        }
-
-        .badge.waiting { 
-            background: rgba(108, 92, 231, 0.15); 
-            color: var(--accent);
-            border: 1px solid rgba(108, 92, 231, 0.3);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state .icon { font-size: 56px; margin-bottom: 16px; }
-        .empty-state .title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-        .empty-state .subtitle {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .retry-btn {
-            margin-top: 16px;
-            padding: 12px 32px;
-            background: var(--accent);
-            border: none;
-            border-radius: var(--radius-sm);
-            color: #fff;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .retry-btn:hover {
-            background: var(--accent-hover);
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-
-        .retry-btn:active { transform: scale(0.95); }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            display: flex;
-            padding: 6px 0;
-            padding-bottom: env(safe-area-inset-bottom, 8px);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 100;
-        }
-
-        .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 9px;
+        .card-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
-            padding: 6px 0;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-            position: relative;
+            margin-top: 6px;
         }
 
-        .nav-item .nav-icon { font-size: 22px; }
-        .nav-item.active { color: var(--accent); }
-        .nav-item:not(.active):hover { color: var(--text-primary); }
-
-        .nav-item .nav-badge {
-            position: absolute;
-            top: 2px;
-            right: 50%;
-            transform: translateX(50%) translateX(14px);
-            background: var(--danger);
-            color: #fff;
-            font-size: 8px;
-            font-weight: 700;
-            padding: 1px 5px;
-            border-radius: 10px;
-            min-width: 16px;
-            text-align: center;
+        .badge-auction {
+            background: #ffd70033;
+            color: #ffd700;
         }
 
-        .loading {
-            display: flex;
-            justify-content: center;
+        .badge-fixed {
+            background: #00d2ff33;
+            color: #00d2ff;
+        }
+
+        .btn {
+            display: inline-flex;
             align-items: center;
-            padding: 60px 0;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: var(--bg-card);
-            padding: 14px 24px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 1000;
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: none;
             justify-content: center;
-            align-items: center;
-            z-index: 999;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal {
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            padding: 28px;
-            max-width: 420px;
-            width: 100%;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            animation: slideUp 0.4s ease;
-        }
-
-        .modal-title {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-        }
-
-        .modal input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 12px;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .modal input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px var(--accent-glow);
-        }
-
-        .modal input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 14px;
+            padding: 10px 20px;
             border: none;
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            font-weight: 700;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            width: 100%;
+            gap: 8px;
         }
 
-        .modal-buttons button:active { transform: scale(0.95); }
+        .btn:active {
+            transform: scale(0.96);
+        }
 
         .btn-primary {
             background: var(--accent);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-
-        .btn-secondary {
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--border-light);
-            color: var(--text-primary);
+            color: white;
         }
 
         .btn-success {
             background: var(--success);
-            color: #fff;
+            color: #1a1a2e;
         }
 
-        .btn-success:hover {
-            box-shadow: 0 4px 20px var(--success-glow);
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
         }
 
         .btn-danger {
-            background: var(--danger);
-            color: #fff;
+            background: #ff6b6b;
+            color: white;
         }
 
-        .bid-info-text {
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 12px;
+            width: auto;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
             color: var(--text-secondary);
-            margin-bottom: 16px;
-            font-size: 14px;
-            line-height: 1.7;
         }
 
-        .bid-info-text strong {
-            color: var(--text-primary);
-        }
-
-        .profile-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            padding: 24px;
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
             border: 1px solid var(--border);
-            margin-bottom: 16px;
+            background: var(--bg-color);
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
 
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0aec0' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .profile-avatar {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            font-weight: 800;
-            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
-            flex-shrink: 0;
-            transition: var(--transition);
-        }
-
-        .profile-avatar:hover {
-            transform: scale(1.05);
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-name {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .profile-username {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .profile-id {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-family: monospace;
-        }
-
-        .balance-big {
-            background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
-            border-radius: var(--radius-sm);
-            padding: 20px;
-            margin: 16px 0;
-            text-align: center;
-            border: 1px solid var(--accent);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .balance-big .label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .balance-big .amount {
-            font-size: 40px;
-            font-weight: 900;
-            color: var(--warning);
-            letter-spacing: -1px;
+            font-size: 28px;
+            margin: 0 auto 12px;
+            border: 2px solid var(--accent);
         }
 
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 16px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
-        .profile-stat {
-            background: var(--bg-card);
-            padding: 14px;
-            border-radius: var(--radius-sm);
+        .stat-item {
             text-align: center;
-            border: 1px solid var(--border);
-            transition: var(--transition);
+            padding: 8px;
+            background: var(--bg-color);
+            border-radius: 10px;
         }
 
-        .profile-stat:hover {
-            border-color: var(--border-light);
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--success);
         }
 
-        .profile-stat .value {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .profile-stat .label {
-            font-size: 10px;
+        .stat-label {
+            font-size: 11px;
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-top: 2px;
         }
 
-        .profile-stat .value.accent { color: var(--accent); }
-        .profile-stat .value.success { color: var(--success); }
-        .profile-stat .value.warning { color: var(--warning); }
-        .profile-stat .value.danger { color: var(--danger); }
-
-        .profile-actions {
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .profile-actions button {
-            padding: 12px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .profile-actions button:active { transform: scale(0.95); }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--text-primary);
-        }
-
-        .active-deals-banner {
-            margin-top: 16px;
-            padding: 14px;
-            background: #1a1a2e;
-            border-radius: var(--radius-sm);
-            border-left: 4px solid var(--warning);
-        }
-
-        .active-deals-banner .title {
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .active-deals-banner .count {
-            color: var(--warning);
-            font-weight: 800;
-            font-size: 18px;
-        }
-
-        .deal-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            padding: 16px 18px;
-            border: 1px solid var(--border);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--warning);
-            transition: var(--transition);
-        }
-
-        .deal-card:hover {
-            border-color: var(--border-light);
-        }
-
-        .deal-card .deal-title {
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .deal-card .deal-info {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .deal-card .deal-status {
-            font-size: 12px;
-            font-weight: 600;
-            margin-top: 6px;
-            padding-top: 6px;
-            border-top: 1px solid var(--border);
-        }
-
-        .status-waiting { color: var(--warning); }
-        .status-completed { color: var(--success); }
-        .status-cancelled { color: var(--danger); }
-
-        .deal-card .deal-actions {
-            display: flex;
             gap: 8px;
-            margin-top: 10px;
         }
 
-        .deal-card .deal-actions button {
-            padding: 8px 16px;
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: flex-end;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-close {
+            background: none;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
+            color: var(--text-secondary);
+            font-size: 24px;
             cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
+            padding: 0 8px;
         }
 
-        .deal-card .deal-actions button:active { transform: scale(0.95); }
+        .loading {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+        }
 
-        .deal-timer {
+        .loading .spinner {
             display: inline-block;
-            padding: 2px 10px;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
             border-radius: 12px;
-            font-size: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 2000;
+            display: none;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--accent);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .admin-section {
+            margin-top: 12px;
+        }
+
+        .admin-section-title {
+            font-size: 14px;
             font-weight: 600;
-            background: rgba(253, 203, 110, 0.15);
-            color: var(--warning);
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        @media (max-width: 480px) {
-            body { padding: 12px; padding-bottom: 80px; }
-            
-            .header-logo { font-size: 18px; }
-            .header-balance { padding: 6px 12px; font-size: 12px; }
-            .header-balance .amount { font-size: 14px; }
-            
-            .tab-btn { font-size: 11px; padding: 8px 10px; min-width: 44px; }
-            
-            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .stat-card { padding: 10px 12px; }
-            .stat-card .value { font-size: 16px; }
-            .stat-card .label { font-size: 8px; }
-            
-            .channel-card { padding: 14px; }
-            .channel-card .title { font-size: 14px; }
-            
-            .modal { padding: 20px; }
-            .modal-title { font-size: 18px; }
-            
-            .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .profile-stat { padding: 10px; }
-            .profile-stat .value { font-size: 16px; }
-            
-            .balance-big .amount { font-size: 32px; }
-            
-            .profile-actions { grid-template-columns: 1fr; }
-            
-            .server-settings { flex-direction: column; }
-            .server-selector { min-width: 100%; }
-            
-            .bottom-nav { padding: 4px 0; }
-            .nav-item .nav-icon { font-size: 18px; }
-            .nav-item { font-size: 8px; }
-
-            .profile-header { flex-direction: column; text-align: center; }
+        .request-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        @media (min-width: 481px) and (max-width: 768px) {
-            .profile-stats { grid-template-columns: repeat(3, 1fr); }
-            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        .request-item:last-child {
+            border-bottom: none;
         }
 
-        @media (min-width: 769px) {
-            body {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 24px;
-                padding-bottom: 100px;
+        .request-info {
+            flex: 1;
+        }
+
+        .request-amount {
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .request-user {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .channel-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .channel-item:last-child {
+            border-bottom: none;
+        }
+
+        .channel-info {
+            flex: 1;
+        }
+
+        .channel-name {
+            font-weight: 600;
+        }
+
+        .channel-username {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .channel-meta {
+            text-align: right;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: #00d2ff33;
+            color: #00d2ff;
+        }
+
+        .status-waiting {
+            background: #ffd70033;
+            color: #ffd700;
+        }
+
+        .status-sold {
+            background: #ff6b6b33;
+            color: #ff6b6b;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 12px 0;
+        }
+
+        @media (max-width: 400px) {
+            .nav {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 4px;
             }
-
-            .channel-card:hover {
-                transform: translateY(-2px);
+            .nav-btn {
+                font-size: 10px;
+                padding: 8px 2px;
             }
-
-            .stats-row { gap: 16px; }
-            .stat-card { padding: 18px 20px; }
-            
-            .tabs { gap: 10px; }
-            .tab-btn { padding: 12px 20px; font-size: 14px; }
-            
-            .modal { padding: 36px; max-width: 480px; }
-
-            .profile-header { gap: 24px; }
-            .profile-avatar { width: 88px; height: 88px; font-size: 38px; }
+            .nav-btn .icon {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 <body>
+    <div id="toast" class="toast"></div>
 
-    <div class="toast" id="toast"></div>
-
-    <header class="header">
-        <div class="header-left">
-            <div>
-                <div class="header-logo">✦ Market</div>
-                <div class="header-logo-sub">Username</div>
-            </div>
-        </div>
-        <div class="header-right">
-            <button class="refresh-btn" onclick="loadData()">⟳</button>
-            <div class="header-balance" onclick="switchTab('profile')">
-                <span class="star">⭐</span>
-                <span class="amount" id="balanceDisplay">0</span>
-                <span class="badge" id="dealBadge" style="display:none;"></span>
-            </div>
-        </div>
-    </header>
-
-    <div class="server-settings">
-        <select id="serverSelect" class="server-selector" onchange="changeServer()">
-            <option value="http://localhost:8080">🖥️ Локальный сервер</option>
-            <option value="http://192.168.1.100:8080">📱 Локальная сеть</option>
-            <option value="https://your-domain.com">🌍 Продакшен</option>
-        </select>
-        <span id="statusIndicator" class="connection-status status-online">✅ Онлайн</span>
+    <div class="header">
+        <div class="header-title">🎯 Username Market</div>
+        <div class="header-balance" onclick="refreshBalance()">⭐ <span id="balanceDisplay">0</span></div>
     </div>
 
-    <div class="tabs" id="tabsContainer">
-        <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📊 Все</button>
-        <button class="tab-btn" data-tab="fixed" onclick="switchTab('fixed')">📢 Фикс</button>
-        <button class="tab-btn" data-tab="auction" onclick="switchTab('auction')">🔨 Аукционы</button>
-        <button class="tab-btn" data-tab="my" onclick="switchTab('my')">👤 Мои</button>
-        <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">👤 Профиль</button>
-        <button class="tab-btn" data-tab="deals" onclick="switchTab('deals')">📦 Сделки</button>
+    <div class="nav">
+        <button class="nav-btn active" data-page="market" id="navMarket">
+            <span class="icon">🏪</span> Маркет
+        </button>
+        <button class="nav-btn" data-page="auctions" id="navAuctions">
+            <span class="icon">🔨</span> Аукционы
+        </button>
+        <button class="nav-btn" data-page="profile" id="navProfile">
+            <span class="icon">👤</span> Профиль
+        </button>
+        <button class="nav-btn" data-page="admin" id="navAdmin" style="display:none;">
+            <span class="icon">⚙️</span> Админ
+        </button>
     </div>
 
-    <div class="stats-row" id="statsRow">
-        <div class="stat-card">
-            <div class="label">Всего</div>
-            <div class="value accent" id="totalCount">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">Аукционов</div>
-            <div class="value warning" id="auctionCount">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">Фикс</div>
-            <div class="value success" id="fixedCount">0</div>
-        </div>
-    </div>
-
-    <div id="channelList">
-        <div class="loading"><div class="spinner"></div></div>
-    </div>
-
-    <div class="modal-overlay" id="bidModal">
-        <div class="modal">
-            <div class="modal-title">🔨 Сделать ставку</div>
-            <div class="bid-info-text" id="bidInfo"></div>
-            <input type="number" id="bidAmount" placeholder="Введите сумму ставки" min="1">
-            <div class="modal-buttons">
-                <button class="btn-secondary" onclick="closeBidModal()">Отмена</button>
-                <button class="btn-primary" onclick="submitBid()">Сделать ставку</button>
+    <div id="pageMarket" class="page active">
+        <div id="marketContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Загрузка каналов...</div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="buyModal">
-        <div class="modal">
-            <div class="modal-title">📢 Подтверждение покупки</div>
-            <div class="bid-info-text" id="buyInfo"></div>
-            <div class="modal-buttons">
-                <button class="btn-secondary" onclick="closeBuyModal()">Отмена</button>
-                <button class="btn-success" onclick="confirmBuy()">Купить</button>
+    <div id="pageAuctions" class="page">
+        <div id="auctionsContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Загрузка аукционов...</div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="transferModal">
-        <div class="modal">
-            <div class="modal-title">📦 Проверка передачи</div>
-            <div class="bid-info-text" id="transferInfo"></div>
-            <div class="modal-buttons">
-                <button class="btn-secondary" onclick="closeTransferModal()">Закрыть</button>
-                <button class="btn-success" onclick="confirmTransfer()">✅ Подтвердить передачу</button>
+    <div id="pageProfile" class="page">
+        <div id="profileContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Загрузка профиля...</div>
             </div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('all')">
-            <span class="nav-icon">📊</span>
-            <span>Все</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('auction')">
-            <span class="nav-icon">🔨</span>
-            <span>Аукционы</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('my')">
-            <span class="nav-icon">👤</span>
-            <span>Мои</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('profile')">
-            <span class="nav-icon">👤</span>
-            <span>Профиль</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('deals')">
-            <span class="nav-icon">📦</span>
-            <span>Сделки</span>
-            <span class="nav-badge" id="dealBadgeNav" style="display:none;">0</span>
-        </button>
-    </nav>
+    <div id="pageAdmin" class="page">
+        <div id="adminContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Загрузка админ-панели...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal" id="modalContent">
+            <div class="modal-header">
+                <h3 id="modalTitle">Действие</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
 
     <script>
         // ============================================================
-        // CONFIG
+        // КОНФИГУРАЦИЯ
         // ============================================================
-
-        const BOT_USERNAME = 'UsernameSalerobot';
-        const BOT_URL = 'https://t.me/' + BOT_USERNAME;
-        const DEAL_TIMEOUT = 86400;
-        
-        let currentChannelId = null;
-        let currentDealId = null;
-        let currentTab = 'all';
-        let channels = [];
-        let myChannels = [];
-        let userData = null;
-        let myUserId = null;
-        let pendingDeals = [];
-        let avatarData = null;
+        const CONFIG = {
+            API_URL: 'http://localhost:8000/api',
+            MIN_SELL_PRICE: 5,
+            MIN_WITHDRAW: 50,
+            MAX_WITHDRAW: 1000000,
+            MIN_AUCTION_BID: 1
+        };
 
         // ============================================================
-        // TOAST
+        // TELEGRAM
         // ============================================================
-
-        let toastTimeout;
-
-        function showToast(message, duration) {
-            duration = duration || 3000;
-            var toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(function() {
-                toast.classList.remove('show');
-            }, duration);
-        }
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
         // ============================================================
-        // API URL
+        // STATE
         // ============================================================
-
-        function getApiUrl() {
-            return localStorage.getItem('api_url') || 'http://localhost:8080';
-        }
-
-        function setApiUrl(url) {
-            localStorage.setItem('api_url', url);
-        }
-
-        // ============================================================
-        // АВТОМАТИЧЕСКАЯ АВТОРИЗАЦИЯ
-        // ============================================================
-
-        async function autoAuth() {
-            var tg = window.Telegram?.WebApp;
-            var user_id = null;
-            var username = null;
-            
-            if (tg && tg.initDataUnsafe?.user) {
-                user_id = tg.initDataUnsafe.user.id;
-                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || null;
-                console.log('👤 Авторизация через Telegram:', user_id, username);
-            } else {
-                showToast('❌ Откройте приложение через Telegram', 5000);
-                throw new Error('Not in Telegram WebApp');
-            }
-
-            if (!user_id) {
-                showToast('❌ Не удалось определить пользователя');
-                return null;
-            }
-
-            try {
-                var response = await fetch(getApiUrl() + '/api/auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: user_id,
-                        username: username
-                    })
-                });
-                
-                var data = await response.json();
-                
-                if (data.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user_id', data.user_id);
-                    myUserId = data.user_id;
-                    
-                    if (data.user && data.user.avatar) {
-                        avatarData = data.user.avatar;
-                    }
-                    
-                    showToast('✅ Авторизация выполнена', 2000);
-                    return data.token;
-                } else {
-                    showToast('❌ Ошибка авторизации: ' + data.error);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Auth error:', error);
-                showToast('❌ Ошибка подключения к серверу');
-                return null;
-            }
-        }
+        let state = {
+            user: null,
+            balance: 0,
+            channels: [],
+            auctions: [],
+            myChannels: [],
+            withdrawRequests: [],
+            currentPage: 'market',
+            adminMode: false
+        };
 
         // ============================================================
-        // API CALLS
+        // API КЛИЕНТ
         // ============================================================
-
-        async function apiCall(endpoint, options) {
-            options = options || {};
-            
-            var token = localStorage.getItem('token');
-            if (!token) {
-                token = await autoAuth();
-                if (!token) {
-                    throw new Error('Не удалось авторизоваться');
-                }
-            }
-            
-            var url = getApiUrl() + endpoint;
-            
-            try {
-                var response = await fetch(url, {
-                    ...options,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                        ...(options.headers || {})
-                    }
-                });
-                
-                if (response.status === 401) {
-                    localStorage.removeItem('token');
-                    token = await autoAuth();
-                    if (!token) {
-                        throw new Error('Ошибка авторизации');
-                    }
-                    
-                    response = await fetch(url, {
-                        ...options,
+        const api = {
+            async request(method, endpoint, data = null) {
+                try {
+                    const url = `${CONFIG.API_URL}${endpoint}`;
+                    const options = {
+                        method: method,
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + token,
-                            ...(options.headers || {})
                         }
-                    });
-                }
-                
-                if (!response.ok) {
-                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-                }
-                
-                var data = await response.json();
-                
-                if (!data.ok) {
-                    throw new Error(data.error || 'API error');
-                }
-                
-                return data;
-            } catch (error) {
-                console.error('❌ API Error:', error);
-                showToast('❌ ' + error.message);
-                throw error;
-            }
-        }
+                    };
 
-        // ============================================================
-        // ПРОВЕРКА ПОДКЛЮЧЕНИЯ
-        // ============================================================
+                    if (data) {
+                        options.body = JSON.stringify(data);
+                    }
 
-        async function checkConnection() {
-            try {
-                var response = await fetch(getApiUrl() + '/api/channels', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
+                    const response = await fetch(url, options);
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.error || 'Ошибка запроса');
+                    }
+
+                    return result;
+                } catch (error) {
+                    console.error('API Error:', error);
+                    throw error;
+                }
+            },
+
+            async getChannels() {
+                const result = await this.request('GET', '/channels');
+                return result.data || [];
+            },
+
+            async getAuctions() {
+                const result = await this.request('GET', '/auctions');
+                return result.data || [];
+            },
+
+            async getUser(userId) {
+                const result = await this.request('GET', `/user/${userId}`);
+                return result.data;
+            },
+
+            async getMyChannels(userId) {
+                const result = await this.request('GET', `/user/${userId}/channels`);
+                return result.data || [];
+            },
+
+            async getWithdrawRequests() {
+                const result = await this.request('GET', '/admin/withdraw');
+                return result.data || [];
+            },
+
+            async buyChannel(channelId, userId) {
+                const result = await this.request('POST', `/buy/${channelId}`, { user_id: userId });
+                return result;
+            },
+
+            async placeBid(channelId, userId, amount) {
+                const result = await this.request('POST', `/auction/${channelId}/bid`, {
+                    user_id: userId,
+                    amount: amount
                 });
-                
-                var status = document.getElementById('statusIndicator');
-                if (response.ok) {
-                    status.textContent = '✅ Онлайн';
-                    status.className = 'connection-status status-online';
-                    return true;
-                } else {
-                    status.textContent = '⚠️ Ошибка';
-                    status.className = 'connection-status status-offline';
-                    return false;
-                }
-            } catch (error) {
-                var status = document.getElementById('statusIndicator');
-                status.textContent = '❌ Офлайн';
-                status.className = 'connection-status status-offline';
-                return false;
+                return result;
+            },
+
+            async withdraw(userId, amount) {
+                const result = await this.request('POST', '/withdraw', {
+                    user_id: userId,
+                    amount: amount
+                });
+                return result;
+            },
+
+            async sellChannel(userId, username, title, price, isAuction) {
+                const result = await this.request('POST', '/sell', {
+                    user_id: userId,
+                    username: username,
+                    title: title || username,
+                    price: price,
+                    is_auction: isAuction
+                });
+                return result;
+            },
+
+            async deleteChannel(channelId, userId) {
+                const result = await this.request('DELETE', `/channel/${channelId}`, { user_id: userId });
+                return result;
+            },
+
+            async updateChannelPrice(channelId, userId, price) {
+                const result = await this.request('PUT', `/channel/${channelId}/price`, {
+                    user_id: userId,
+                    price: price
+                });
+                return result;
+            },
+
+            async approveWithdraw(requestId) {
+                const result = await this.request('POST', `/admin/withdraw/${requestId}/approve`);
+                return result;
+            },
+
+            async rejectWithdraw(requestId) {
+                const result = await this.request('POST', `/admin/withdraw/${requestId}/reject`);
+                return result;
+            },
+
+            async giveBalance(userId, amount) {
+                const result = await this.request('POST', '/admin/balance', {
+                    user_id: userId,
+                    amount: amount
+                });
+                return result;
+            },
+
+            async broadcast(message) {
+                const result = await this.request('POST', '/admin/broadcast', { message });
+                return result;
+            },
+
+            async createInvoice(userId, amount) {
+                const result = await this.request('POST', '/invoice', {
+                    user_id: userId,
+                    amount: amount
+                });
+                return result;
+            },
+
+            async createCryptoInvoice(userId, amount, currency) {
+                const result = await this.request('POST', '/crypto/invoice', {
+                    user_id: userId,
+                    amount: amount,
+                    currency: currency
+                });
+                return result;
+            },
+
+            async checkPayment(paymentId) {
+                const result = await this.request('GET', `/payment/${paymentId}`);
+                return result;
             }
+        };
+
+        // ============================================================
+        // DOM HELPERS
+        // ============================================================
+        function $(id) { return document.getElementById(id); }
+
+        function showToast(msg, type = 'info') {
+            const t = $('toast');
+            t.textContent = msg;
+            t.className = 'toast show ' + type;
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        function changeServer() {
-            var select = document.getElementById('serverSelect');
-            setApiUrl(select.value);
-            showToast('🔄 Сервер изменен на: ' + select.value);
-            loadData();
+        function openModal(title, html) {
+            $('modalTitle').textContent = title;
+            $('modalBody').innerHTML = html;
+            $('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            $('modalOverlay').classList.remove('active');
+        }
+
+        function formatTime(ts) {
+            if (!ts) return '—';
+            const d = new Date(ts * 1000);
+            return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function timeRemaining(ts) {
+            const diff = ts - Date.now() / 1000;
+            if (diff <= 0) return 'Завершен';
+            const days = Math.floor(diff / 86400);
+            const hours = Math.floor((diff % 86400) / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            return `${days}д ${hours}ч ${minutes}м`;
         }
 
         // ============================================================
-        // LOAD DATA
+        // RENDER FUNCTIONS
         // ============================================================
+        async function renderMarket() {
+            const container = $('marketContent');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Загрузка...</div></div>';
 
-        async function loadData() {
             try {
-                var container = document.getElementById('channelList');
-                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-                
-                await checkConnection();
-                
-                var [channelsData, balanceData, userInfo] = await Promise.all([
-                    apiCall('/api/channels'),
-                    apiCall('/api/user/balance'),
-                    apiCall('/api/user/me')
-                ]);
-                
-                channels = channelsData.data || [];
-                userData = userInfo.data || null;
-                pendingDeals = userData?.pending_deals || [];
-                
-                if (userData && userData.avatar) {
-                    avatarData = userData.avatar;
-                }
-                
-                updateBalance(balanceData.balance || 0);
-                updateStats();
-                updateDealBadge();
-                
-                if (currentTab === 'profile') {
-                    renderProfile();
-                } else if (currentTab === 'deals') {
-                    renderDeals();
-                } else {
-                    renderCurrentTab();
-                }
-                
-                if (pendingDeals.length > 0) {
-                    showToast('📦 У вас есть активные сделки!', 4000);
-                }
-                
-            } catch (error) {
-                document.getElementById('channelList').innerHTML = `
-                    <div class="empty-state">
-                        <div class="icon">⚠️</div>
-                        <div class="title">Ошибка загрузки</div>
-                        <div class="subtitle">${error.message || 'Не удалось подключиться к API'}</div>
-                        <button class="retry-btn" onclick="loadData()">🔄 Обновить</button>
-                    </div>
-                `;
-            }
-        }
+                const channels = await api.getChannels();
+                state.channels = channels;
 
-        async function loadMyChannels() {
-            try {
-                var data = await apiCall('/api/my/channels');
-                myChannels = data.data || [];
-                if (currentTab === 'my') {
-                    renderMyChannels();
-                }
-            } catch (error) {
-                myChannels = [];
-                if (currentTab === 'my') {
-                    renderMyChannels();
-                }
-            }
-        }
-
-        function updateBalance(balance) {
-            document.getElementById('balanceDisplay').textContent = balance;
-        }
-
-        function updateStats() {
-            var total = channels.length;
-            var auctions = 0;
-            var fixed = 0;
-            
-            for (var i = 0; i < channels.length; i++) {
-                if (channels[i].is_auction === 1) {
-                    auctions++;
-                } else {
-                    fixed++;
-                }
-            }
-            
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('auctionCount').textContent = auctions;
-            document.getElementById('fixedCount').textContent = fixed;
-        }
-
-        function updateDealBadge() {
-            var count = pendingDeals.length;
-            var badge = document.getElementById('dealBadge');
-            var badgeNav = document.getElementById('dealBadgeNav');
-            
-            if (count > 0) {
-                badge.style.display = 'block';
-                badgeNav.style.display = 'block';
-                badgeNav.textContent = count;
-            } else {
-                badge.style.display = 'none';
-                badgeNav.style.display = 'none';
-            }
-        }
-
-        function renderProfile() {
-            var container = document.getElementById('channelList');
-            
-            if (!userData) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="icon">👤</div>
-                        <div class="title">Профиль не найден</div>
-                        <div class="subtitle">Попробуйте обновить страницу</div>
-                    </div>
-                `;
-                return;
-            }
-
-            var displayName = userData.username || 'Пользователь';
-            var avatarStyle = '';
-            var avatarLetter = 'U';
-            
-            if (avatarData) {
-                avatarStyle = 'background: ' + avatarData.background + ';';
-                avatarLetter = avatarData.letter;
-            } else {
-                var colors = ['#6c5ce7', '#00b894', '#fdcb6e', '#ff6b6b', '#0984e3', '#e17055'];
-                var color = colors[userData.id % colors.length];
-                avatarStyle = 'background: linear-gradient(135deg, ' + color + ', ' + color + 'dd);';
-                avatarLetter = (displayName || 'U')[0].toUpperCase();
-            }
-            
-            var html = `
-                <div class="profile-card">
-                    <div class="profile-header">
-                        <div class="profile-avatar" style="${avatarStyle}">${avatarLetter}</div>
-                        <div class="profile-info">
-                            <div class="profile-name">${displayName}</div>
-                            <div class="profile-username">🆔 ID: ${userData.id}</div>
-                            <div class="profile-id">📅 ${new Date(userData.created_at * 1000).toLocaleDateString()}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="balance-big">
-                        <div class="label">⭐ Баланс</div>
-                        <div class="amount">${userData.balance}</div>
-                    </div>
-                    
-                    <div class="profile-stats">
-                        <div class="profile-stat">
-                            <div class="value accent">${userData.total_bought || 0}</div>
-                            <div class="label">📥 Куплено</div>
-                        </div>
-                        <div class="profile-stat">
-                            <div class="value success">${userData.total_sold || 0}</div>
-                            <div class="label">📤 Продано</div>
-                        </div>
-                        <div class="profile-stat">
-                            <div class="value warning">${userData.total_spent || 0}</div>
-                            <div class="label">💸 Потрачено</div>
-                        </div>
-                        <div class="profile-stat">
-                            <div class="value accent">${userData.channels_count || 0}</div>
-                            <div class="label">📢 Каналов</div>
-                        </div>
-                        <div class="profile-stat">
-                            <div class="value success">${userData.deals_bought_count || 0}</div>
-                            <div class="label">📥 Сделок</div>
-                        </div>
-                        <div class="profile-stat">
-                            <div class="value warning">${userData.deals_sold_count || 0}</div>
-                            <div class="label">📤 Продаж</div>
-                        </div>
-                    </div>
-                    
-                    ${pendingDeals.length > 0 ? `
-                        <div class="active-deals-banner">
-                            <div class="title">📦 Активные сделки</div>
-                            <div>У вас <span class="count">${pendingDeals.length}</span> активных сделок</div>
-                            <button onclick="switchTab('deals')" style="margin-top:8px; padding:8px 20px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">
-                                Перейти к сделкам →
-                            </button>
-                        </div>
-                    ` : ''}
-                    
-                    <div class="profile-actions">
-                        <button class="btn-primary" onclick="switchTab('my')">📢 Мои каналы</button>
-                        <button class="btn-outline" onclick="switchTab('deals')">📦 Сделки</button>
-                        <button class="btn-outline" onclick="openBot()" style="grid-column: span 2;">🤖 Открыть бота</button>
-                    </div>
-                </div>
-            `;
-            
-            container.innerHTML = html;
-        }
-
-        function renderDeals() {
-            var container = document.getElementById('channelList');
-            
-            if (!pendingDeals || pendingDeals.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="icon">📦</div>
-                        <div class="title">Нет активных сделок</div>
-                        <div class="subtitle">Все сделки завершены или отменены</div>
-                    </div>
-                `;
-                return;
-            }
-
-            var html = '<div style="margin-bottom:12px;"><h3 style="font-weight:800;">📦 Активные сделки</h3></div><div class="channel-list">';
-            
-            for (var i = 0; i < pendingDeals.length; i++) {
-                var deal = pendingDeals[i];
-                var timeLeft = DEAL_TIMEOUT - (Date.now() / 1000 - deal.paid_at);
-                var hoursLeft = Math.floor(timeLeft / 3600);
-                var minutesLeft = Math.floor((timeLeft % 3600) / 60);
-                var timeText = '';
-                
-                if (hoursLeft > 0) {
-                    timeText = hoursLeft + 'ч ' + minutesLeft + 'м';
-                } else {
-                    timeText = minutesLeft + 'м';
-                }
-                
-                html += `
-                    <div class="deal-card">
-                        <div class="deal-title">${deal.title || 'Канал'}</div>
-                        <div class="deal-info">@${deal.username || 'username'} • 💰 ${deal.price} ⭐</div>
-                        <div class="deal-info">
-                            <span class="deal-timer">⏰ ${timeText}</span>
-                        </div>
-                        <div class="deal-status status-waiting">⏳ Ожидает передачи</div>
-                        <div class="deal-actions">
-                            <button class="btn-primary" onclick="checkTransfer(${deal.id})">🔍 Проверить передачу</button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
-        function renderChannels(channelsList, title) {
-            title = title || '';
-            var container = document.getElementById('channelList');
-
-            if (!channelsList || channelsList.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="icon">📭</div>
-                        <div class="title">${title || 'Нет каналов'}</div>
-                        <div class="subtitle">${currentTab === 'my' ? 'Выставьте канал через бота' : 'Попробуйте обновить позже'}</div>
-                    </div>
-                `;
-                return;
-            }
-
-            var html = '<div class="channel-list">';
-            
-            for (var i = 0; i < channelsList.length; i++) {
-                var channel = channelsList[i];
-                var isAuction = channel.is_auction === 1;
-                var statusBadge = '';
-                
-                if (channel.status === 'sold') {
-                    statusBadge = '<span class="badge sold">✅ Продано</span>';
-                } else if (channel.status === 'waiting_transfer') {
-                    statusBadge = '<span class="badge waiting">⏳ Ожидает</span>';
-                }
-                
-                var bidInfo = '';
-                if (isAuction && channel.auction_current_bid && channel.status === 'active') {
-                    var timeLeft = channel.time_left || 0;
-                    var days = Math.floor(timeLeft / 86400);
-                    var hours = Math.floor((timeLeft % 86400) / 3600);
-                    var timeText = '';
-                    if (days > 0) timeText = days + 'д ';
-                    if (hours > 0) timeText += hours + 'ч';
-                    if (!timeText) timeText = 'Завершается';
-                    
-                    bidInfo = `
-                        <div class="bid-info">
-                            💰 Текущая ставка: <strong>${channel.auction_current_bid} ⭐</strong>
-                            ${channel.bidder_username ? '• 👤 @' + channel.bidder_username : ''}
-                            ${timeText ? '• ⏰ ' + timeText : ''}
+                if (!channels || channels.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>Нет каналов на продаже</h3>
+                            <p style="margin-top:8px;font-size:14px;">Станьте первым продавцом!</p>
                         </div>
                     `;
+                    return;
                 }
 
-                var badgeClass = isAuction ? 'auction' : 'fixed';
-                var badgeText = isAuction ? '🔨 Аукцион' : '📢 Фикс';
-                var priceDisplay = isAuction && channel.auction_current_bid && channel.status === 'active'
-                    ? channel.auction_current_bid 
-                    : channel.price;
-
-                html += `
-                    <div class="channel-card" onclick="${channel.status === 'active' ? 'viewChannel(' + channel.id + ')' : ''}">
-                        <div class="title">${channel.title}</div>
-                        <div class="username">@${channel.username}</div>
-                        <div class="meta">
-                            <span class="price">⭐ ${priceDisplay}</span>
-                            <span class="badge ${badgeClass}">${badgeText}</span>
-                            ${statusBadge}
-                            ${channel.seller_username ? '<span style="color:var(--text-secondary);font-size:12px;">👤 @' + channel.seller_username + '</span>' : ''}
+                let html = '';
+                channels.forEach(ch => {
+                    html += `
+                        <div class="card" onclick="viewChannel(${ch.id})">
+                            <div class="card-title">${ch.title || ch.username}</div>
+                            <div class="card-subtitle">@${ch.username}</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                                <span class="card-price">⭐ ${ch.price}</span>
+                                <span class="card-badge badge-fixed">Фикс</span>
+                            </div>
                         </div>
-                        ${bidInfo}
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Render market error:', e);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Ошибка загрузки</h3>
+                        <p style="font-size:13px;color:var(--text-secondary);">${e.message}</p>
+                        <button class="btn btn-secondary" style="margin-top:12px;" onclick="renderMarket()">🔄 Повторить</button>
+                    </div>
+                `;
+                showToast('Ошибка загрузки: ' + e.message, 'error');
+            }
+        }
+
+        async function renderAuctions() {
+            const container = $('auctionsContent');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Загрузка...</div></div>';
+
+            try {
+                const auctions = await api.getAuctions();
+                state.auctions = auctions;
+
+                if (!auctions || auctions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔨</div>
+                            <h3>Нет активных аукционов</h3>
+                            <p style="margin-top:8px;font-size:14px;">Создайте аукцион в разделе профиля</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                auctions.forEach(ch => {
+                    const endTime = ch.auction_end_time;
+                    const timeText = endTime ? timeRemaining(endTime) : 'Ожидает ставки';
+                    const currentBid = ch.auction_current_bid || ch.price;
+                    html += `
+                        <div class="card" onclick="viewAuction(${ch.id})">
+                            <div class="card-title">${ch.title || ch.username}</div>
+                            <div class="card-subtitle">@${ch.username}</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;flex-wrap:wrap;gap:4px;">
+                                <span style="font-size:14px;">💰 Ставка: <strong>${currentBid} ⭐</strong></span>
+                                <span class="card-badge badge-auction">Аукцион</span>
+                            </div>
+                            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">
+                                ⏱ ${timeText}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Render auctions error:', e);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Ошибка загрузки</h3>
+                        <p style="font-size:13px;color:var(--text-secondary);">${e.message}</p>
+                    </div>
+                `;
+                showToast('Ошибка загрузки: ' + e.message, 'error');
+            }
+        }
+
+        async function renderProfile() {
+            const container = $('profileContent');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Загрузка...</div></div>';
+
+            try {
+                const userId = tg.initDataUnsafe?.user?.id;
+                if (!userId) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔒</div>
+                            <h3>Авторизуйтесь в Telegram</h3>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const user = await api.getUser(userId);
+                state.user = user;
+                state.balance = user?.balance || 0;
+                updateBalanceDisplay();
+
+                const myChannels = await api.getMyChannels(userId);
+                state.myChannels = myChannels;
+
+                let html = `
+                    <div class="profile-avatar">👤</div>
+                    <div style="text-align:center;margin-bottom:12px;">
+                        <div style="font-size:18px;font-weight:700;">${user?.username || 'Без username'}</div>
+                        <div style="font-size:13px;color:var(--text-secondary);">ID: ${userId}</div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${user?.balance || 0}</div>
+                            <div class="stat-label">⭐ Баланс</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${user?.total_bought || 0}</div>
+                            <div class="stat-label">📥 Куплено</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${user?.total_sold || 0}</div>
+                            <div class="stat-label">📤 Продано</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px;">
+                        <button class="btn btn-success" onclick="openTopup()">⭐ Пополнить баланс</button>
+                        <button class="btn btn-primary" style="margin-top:8px;" onclick="openWithdraw()">💰 Вывести Stars</button>
+                        <button class="btn btn-secondary" style="margin-top:8px;" onclick="openSell()">📢 Выставить username</button>
+                        <button class="btn btn-outline" style="margin-top:8px;" onclick="refreshData()">🔄 Обновить</button>
+                    </div>
+                `;
+
+                if (myChannels && myChannels.length > 0) {
+                    html += `<div style="margin-top:16px;"><h4 style="margin-bottom:8px;">Мои каналы</h4>`;
+                    myChannels.forEach(ch => {
+                        const badge = ch.is_auction ? 'badge-auction' : 'badge-fixed';
+                        const label = ch.is_auction ? 'Аукцион' : 'Фикс';
+                        const statusClass = ch.status === 'active' ? 'status-active' :
+                            ch.status === 'waiting_transfer' ? 'status-waiting' : 'status-sold';
+                        const statusText = ch.status === 'active' ? 'В продаже' :
+                            ch.status === 'waiting_transfer' ? 'Ожидает' : 'Продано';
+                        html += `
+                            <div class="channel-item" onclick="editChannel(${ch.id})">
+                                <div class="channel-info">
+                                    <div class="channel-name">${ch.title || ch.username}</div>
+                                    <div class="channel-username">@${ch.username}</div>
+                                </div>
+                                <div class="channel-meta">
+                                    <div style="font-weight:600;color:var(--success);">${ch.price} ⭐</div>
+                                    <span class="card-badge ${badge}" style="font-size:10px;">${label}</span>
+                                    <span class="status-badge ${statusClass}" style="font-size:9px;">${statusText}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Render profile error:', e);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Ошибка загрузки</h3>
+                        <p style="font-size:13px;color:var(--text-secondary);">${e.message}</p>
+                    </div>
+                `;
+                showToast('Ошибка загрузки: ' + e.message, 'error');
+            }
+        }
+
+        async function renderAdmin() {
+            const container = $('adminContent');
+            const userId = tg.initDataUnsafe?.user?.id;
+            const ADMIN_IDS = [7967408962];
+
+            if (!userId || !ADMIN_IDS.includes(userId)) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔒</div>
+                        <h3>Нет доступа к админ-панели</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            state.adminMode = true;
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Загрузка...</div></div>';
+
+            try {
+                const requests = await api.getWithdrawRequests();
+                state.withdrawRequests = requests;
+
+                let html = `
+                    <div style="margin-bottom:12px;">
+                        <button class="btn btn-secondary" onclick="adminGiveBalance()">💰 Выдать баланс</button>
+                        <button class="btn btn-outline" style="margin-top:6px;" onclick="adminBroadcast()">📢 Рассылка</button>
+                    </div>
+                    <div class="admin-section">
+                        <div class="admin-section-title">📝 Заявки на вывод (${requests?.length || 0})</div>
+                `;
+
+                if (!requests || requests.length === 0) {
+                    html += `<div style="text-align:center;padding:20px;color:var(--text-secondary);">Нет заявок</div>`;
+                } else {
+                    requests.forEach(req => {
+                        html += `
+                            <div class="request-item">
+                                <div class="request-info">
+                                    <div class="request-user">👤 ${req.username || req.user_id}</div>
+                                    <div class="request-amount">⭐ ${req.amount}</div>
+                                    <div style="font-size:11px;color:var(--text-secondary);">${formatTime(req.created_at)}</div>
+                                </div>
+                                <div class="request-actions">
+                                    <button class="btn btn-success btn-sm" onclick="adminApprove(${req.id})">✅</button>
+                                    <button class="btn btn-danger btn-sm" onclick="adminReject(${req.id})">❌</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                html += `</div>`;
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Render admin error:', e);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Ошибка загрузки</h3>
+                        <p style="font-size:13px;color:var(--text-secondary);">${e.message}</p>
                     </div>
                 `;
             }
-
-            html += '</div>';
-            container.innerHTML = html;
         }
 
-        function renderMyChannels() {
-            renderChannels(myChannels, 'Вы не выставили ни одного канала');
+        // ============================================================
+        // VIEW FUNCTIONS
+        // ============================================================
+        async function viewChannel(id) {
+            const ch = state.channels.find(c => c.id === id);
+            if (!ch) { showToast('Канал не найден', 'error'); return; }
+
+            const html = `
+                <div style="text-align:center;margin-bottom:16px;">
+                    <div style="font-size:20px;font-weight:700;">${ch.title || ch.username}</div>
+                    <div style="color:var(--text-secondary);">@${ch.username}</div>
+                    <div style="font-size:24px;font-weight:700;color:var(--success);margin:12px 0;">⭐ ${ch.price}</div>
+                    <div style="font-size:13px;color:var(--text-secondary);">Продавец: ${ch.seller_id}</div>
+                </div>
+                <button class="btn btn-success" onclick="buyChannel(${ch.id})">Купить за ${ch.price} ⭐</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('📢 ' + (ch.title || ch.username), html);
         }
 
-        function renderCurrentTab() {
-            document.getElementById('statsRow').style.display = (currentTab === 'profile' || currentTab === 'deals') ? 'none' : 'grid';
-            
-            if (currentTab === 'profile') {
-                renderProfile();
+        async function viewAuction(id) {
+            const ch = state.auctions.find(c => c.id === id);
+            if (!ch) { showToast('Аукцион не найден', 'error'); return; }
+
+            const currentBid = ch.auction_current_bid || ch.price;
+            const minBid = currentBid + CONFIG.MIN_AUCTION_BID;
+            const timeText = ch.auction_end_time ? timeRemaining(ch.auction_end_time) : 'Ожидает первой ставки';
+
+            const html = `
+                <div style="text-align:center;margin-bottom:16px;">
+                    <div style="font-size:20px;font-weight:700;">${ch.title || ch.username}</div>
+                    <div style="color:var(--text-secondary);">@${ch.username}</div>
+                    <div style="font-size:14px;color:var(--text-secondary);margin:8px 0;">⏱ ${timeText}</div>
+                    <div style="font-size:18px;font-weight:700;color:var(--success);">
+                        Текущая ставка: ${currentBid} ⭐
+                    </div>
+                    <div style="font-size:13px;color:var(--text-secondary);">
+                        Минимальная: ${minBid} ⭐
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ваша ставка (минимум ${minBid})</label>
+                    <input class="form-input" id="bidAmount" type="number" value="${minBid}" min="${minBid}">
+                </div>
+                <button class="btn btn-success" onclick="placeBid(${ch.id})">Сделать ставку</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('🔨 ' + (ch.title || ch.username), html);
+        }
+
+        async function editChannel(id) {
+            const ch = state.myChannels.find(c => c.id === id);
+            if (!ch) { showToast('Канал не найден', 'error'); return; }
+
+            const html = `
+                <div style="text-align:center;margin-bottom:12px;">
+                    <div style="font-size:18px;font-weight:700;">${ch.title || ch.username}</div>
+                    <div style="color:var(--text-secondary);">@${ch.username}</div>
+                    <div style="font-size:16px;font-weight:700;color:var(--success);margin:8px 0;">⭐ ${ch.price}</div>
+                    <div style="font-size:12px;color:var(--text-secondary);">
+                        Статус: ${ch.status === 'active' ? '🟢 В продаже' : ch.status === 'waiting_transfer' ? '🟡 Ожидает' : '🔴 Продано'}
+                    </div>
+                </div>
+                ${!ch.is_auction && ch.status === 'active' ? `
+                    <div class="form-group">
+                        <label class="form-label">Новая цена</label>
+                        <input class="form-input" id="newPrice" type="number" value="${ch.price}" min="${CONFIG.MIN_SELL_PRICE}">
+                    </div>
+                    <button class="btn btn-primary" onclick="updatePrice(${ch.id})">Изменить цену</button>
+                ` : ch.is_auction ? `
+                    <div style="text-align:center;color:var(--text-secondary);font-size:13px;">Цену аукциона изменить нельзя</div>
+                ` : `
+                    <div style="text-align:center;color:var(--text-secondary);font-size:13px;">Канал уже продан</div>
+                `}
+                ${ch.status === 'active' ? `
+                    <button class="btn btn-danger" style="margin-top:8px;" onclick="deleteChannel(${ch.id})">Снять с продажи</button>
+                ` : ''}
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('⚙️ Управление', html);
+        }
+
+        // ============================================================
+        // ACTION FUNCTIONS
+        // ============================================================
+        async function buyChannel(id) {
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
                 return;
             }
-            
-            if (currentTab === 'deals') {
-                renderDeals();
-                return;
-            }
-            
-            if (currentTab === 'all') {
-                renderChannels(channels, 'Нет активных каналов');
-            } else if (currentTab === 'fixed') {
-                var fixedChannels = [];
-                for (var i = 0; i < channels.length; i++) {
-                    if (channels[i].is_auction === 0 && channels[i].status === 'active') {
-                        fixedChannels.push(channels[i]);
-                    }
+
+            closeModal();
+            showToast('Обработка покупки...', 'info');
+
+            try {
+                const result = await api.buyChannel(id, userId);
+                if (result.success) {
+                    showToast(`✅ Куплено за ${result.price} Stars!`, 'success');
+                    refreshData();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка покупки'), 'error');
                 }
-                renderChannels(fixedChannels, 'Нет каналов с фиксированной ценой');
-            } else if (currentTab === 'auction') {
-                var auctionChannels = [];
-                for (var i = 0; i < channels.length; i++) {
-                    if (channels[i].is_auction === 1 && channels[i].status === 'active') {
-                        auctionChannels.push(channels[i]);
-                    }
-                }
-                renderChannels(auctionChannels, 'Нет активных аукционов');
-            } else if (currentTab === 'my') {
-                loadMyChannels();
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
             }
         }
 
-        function switchTab(tab) {
-            currentTab = tab;
-            
-            var tabBtns = document.querySelectorAll('.tab-btn');
-            for (var i = 0; i < tabBtns.length; i++) {
-                var btn = tabBtns[i];
-                btn.classList.toggle('active', btn.dataset.tab === tab);
+        async function placeBid(id) {
+            const input = document.getElementById('bidAmount');
+            if (!input) return;
+            const amount = parseInt(input.value);
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Введите корректную сумму', 'error');
+                return;
             }
-            
-            var navItems = document.querySelectorAll('.nav-item');
-            var tabNames = {
-                'all': 'все',
-                'auction': 'аукционы',
-                'my': 'мои',
-                'profile': 'профиль',
-                'deals': 'сделки',
-                'fixed': 'фикс'
+
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Обработка ставки...', 'info');
+
+            try {
+                const result = await api.placeBid(id, userId, amount);
+                if (result.success) {
+                    showToast(`✅ Ставка ${result.amount} ⭐ принята!`, 'success');
+                    refreshData();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка ставки'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        async function updatePrice(id) {
+            const input = document.getElementById('newPrice');
+            if (!input) return;
+            const price = parseInt(input.value);
+            if (isNaN(price) || price < CONFIG.MIN_SELL_PRICE) {
+                showToast(`Минимальная цена ${CONFIG.MIN_SELL_PRICE} ⭐`, 'error');
+                return;
+            }
+
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Обновление цены...', 'info');
+
+            try {
+                const result = await api.updateChannelPrice(id, userId, price);
+                if (result.success) {
+                    showToast('✅ Цена обновлена', 'success');
+                    refreshData();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка обновления'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        async function deleteChannel(id) {
+            if (!confirm('Снять канал с продажи?')) return;
+
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Снятие с продажи...', 'info');
+
+            try {
+                const result = await api.deleteChannel(id, userId);
+                if (result.success) {
+                    showToast('✅ Канал снят с продажи', 'success');
+                    refreshData();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        function openTopup() {
+            const html = `
+                <div style="text-align:center;margin-bottom:16px;">
+                    <div style="font-size:14px;color:var(--text-secondary);">Пополните баланс Telegram Stars</div>
+                    <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Баланс: ${state.balance} ⭐</div>
+                </div>
+                <div class="grid-2">
+                    <button class="btn btn-success btn-sm" onclick="topupAmount(10)">10 ⭐</button>
+                    <button class="btn btn-success btn-sm" onclick="topupAmount(50)">50 ⭐</button>
+                    <button class="btn btn-success btn-sm" onclick="topupAmount(100)">100 ⭐</button>
+                    <button class="btn btn-success btn-sm" onclick="topupAmount(500)">500 ⭐</button>
+                </div>
+                <div class="form-group" style="margin-top:12px;">
+                    <label class="form-label">Своя сумма</label>
+                    <input class="form-input" id="customTopup" type="number" placeholder="Введите сумму" min="1">
+                </div>
+                <button class="btn btn-primary" onclick="topupCustom()">Пополнить</button>
+                <div class="divider"></div>
+                <div style="text-align:center;font-size:13px;color:var(--text-secondary);">Или через CryptoBot</div>
+                <button class="btn btn-secondary" onclick="openCryptoTopup()">🪙 Пополнить через CryptoBot</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('⭐ Пополнение', html);
+        }
+
+        function openCryptoTopup() {
+            const html = `
+                <div style="text-align:center;margin-bottom:12px;">
+                    <div style="font-size:14px;color:var(--text-secondary);">Пополнение через CryptoBot</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Выберите валюту</label>
+                    <select class="form-select" id="cryptoCurrency">
+                        <option value="USDT">USDT</option>
+                        <option value="TON">TON</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Сумма в Stars</label>
+                    <input class="form-input" id="cryptoAmount" type="number" placeholder="Введите сумму" min="1">
+                </div>
+                <button class="btn btn-success" onclick="cryptoTopup()">Создать счет</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="openTopup()">Назад</button>
+            `;
+            openModal('🪙 CryptoBot', html);
+        }
+
+        async function cryptoTopup() {
+            const amount = parseInt(document.getElementById('cryptoAmount').value);
+            const currency = document.getElementById('cryptoCurrency').value;
+
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Введите корректную сумму', 'error');
+                return;
+            }
+
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Создание счета...', 'info');
+
+            try {
+                const result = await api.createCryptoInvoice(userId, amount, currency);
+                if (result.success && result.pay_url) {
+                    window.open(result.pay_url, '_blank');
+                    showToast('✅ Счет создан!', 'success');
+                    setTimeout(async () => {
+                        const checkResult = await api.checkPayment(result.payment_id);
+                        if (checkResult.status === 'paid') {
+                            showToast('✅ Платеж подтвержден!', 'success');
+                            refreshData();
+                        }
+                    }, 30000);
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка создания счета'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        async function topupAmount(amount) {
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Создание инвойса...', 'info');
+
+            try {
+                const result = await api.createInvoice(userId, amount);
+                if (result.success && result.invoice_link) {
+                    window.open(result.invoice_link, '_blank');
+                    showToast('✅ Инвойс создан!', 'success');
+                    setTimeout(async () => {
+                        const checkResult = await api.checkPayment(result.payment_id);
+                        if (checkResult.status === 'paid') {
+                            showToast('✅ Платеж подтвержден!', 'success');
+                            refreshData();
+                        }
+                    }, 30000);
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка создания инвойса'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        async function topupCustom() {
+            const input = document.getElementById('customTopup');
+            if (!input) return;
+            const amount = parseInt(input.value);
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Введите корректную сумму', 'error');
+                return;
+            }
+            await topupAmount(amount);
+        }
+
+        function openWithdraw() {
+            const html = `
+                <div style="text-align:center;margin-bottom:16px;">
+                    <div style="font-size:14px;color:var(--text-secondary);">
+                        Минимум ${CONFIG.MIN_WITHDRAW} ⭐<br>
+                        Максимум ${CONFIG.MAX_WITHDRAW} ⭐<br>
+                        Баланс: ${state.balance} ⭐
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Сумма вывода</label>
+                    <input class="form-input" id="withdrawAmount" type="number" 
+                           placeholder="Введите сумму" 
+                           min="${CONFIG.MIN_WITHDRAW}" 
+                           max="${Math.min(state.balance, CONFIG.MAX_WITHDRAW)}">
+                </div>
+                <button class="btn btn-primary" onclick="withdrawSubmit()">Вывести</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('💰 Вывод Stars', html);
+        }
+
+        async function withdrawSubmit() {
+            const input = document.getElementById('withdrawAmount');
+            if (!input) return;
+            const amount = parseInt(input.value);
+
+            if (isNaN(amount) || amount < CONFIG.MIN_WITHDRAW) {
+                showToast(`Минимум ${CONFIG.MIN_WITHDRAW} ⭐`, 'error');
+                return;
+            }
+
+            if (amount > CONFIG.MAX_WITHDRAW) {
+                showToast(`Максимум ${CONFIG.MAX_WITHDRAW} ⭐`, 'error');
+                return;
+            }
+
+            if (amount > state.balance) {
+                showToast(`Недостаточно средств. Баланс: ${state.balance} ⭐`, 'error');
+                return;
+            }
+
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Создание заявки...', 'info');
+
+            try {
+                const result = await api.withdraw(userId, amount);
+                if (result.success) {
+                    showToast(`✅ Заявка #${result.request_id} создана`, 'success');
+                    refreshData();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        function openSell() {
+            const html = `
+                <div style="text-align:center;margin-bottom:12px;">
+                    <div style="font-size:14px;color:var(--text-secondary);">Выберите способ продажи</div>
+                </div>
+                <button class="btn btn-secondary" onclick="sellFixed()">📢 Фиксированная цена</button>
+                <button class="btn btn-success" style="margin-top:8px;" onclick="sellAuction()">🔨 Аукцион</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('📢 Продажа', html);
+        }
+
+        function sellFixed() {
+            const html = `
+                <div class="form-group">
+                    <label class="form-label">Ссылка на канал (или @username)</label>
+                    <input class="form-input" id="sellUsername" placeholder="https://t.me/username или @username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Название канала</label>
+                    <input class="form-input" id="sellTitle" placeholder="Название канала">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Цена (⭐)</label>
+                    <input class="form-input" id="sellPrice" type="number" placeholder="Цена в Stars" min="${CONFIG.MIN_SELL_PRICE}">
+                </div>
+                <button class="btn btn-success" onclick="submitSell(false)">Выставить на продажу</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="openSell()">Назад</button>
+            `;
+            openModal('📢 Фиксированная цена', html);
+        }
+
+        function sellAuction() {
+            const html = `
+                <div class="form-group">
+                    <label class="form-label">Ссылка на канал (или @username)</label>
+                    <input class="form-input" id="sellUsername" placeholder="https://t.me/username или @username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Название канала</label>
+                    <input class="form-input" id="sellTitle" placeholder="Название канала">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Стартовая цена (⭐)</label>
+                    <input class="form-input" id="sellPrice" type="number" placeholder="Стартовая цена" min="${CONFIG.MIN_SELL_PRICE}">
+                </div>
+                <button class="btn btn-success" onclick="submitSell(true)">Выставить на аукцион</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="openSell()">Назад</button>
+            `;
+            openModal('🔨 Аукцион', html);
+        }
+
+        async function submitSell(isAuction) {
+            const username = document.getElementById('sellUsername').value.trim();
+            const title = document.getElementById('sellTitle').value.trim() || username;
+            const price = parseInt(document.getElementById('sellPrice').value);
+
+            if (!username) {
+                showToast('Введите ссылку на канал', 'error');
+                return;
+            }
+            if (isNaN(price) || price < CONFIG.MIN_SELL_PRICE) {
+                showToast(`Минимальная цена ${CONFIG.MIN_SELL_PRICE} ⭐`, 'error');
+                return;
+            }
+
+            const userId = tg.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('Авторизуйтесь в Telegram', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Выставление канала...', 'info');
+
+            try {
+                const result = await api.sellChannel(userId, username, title, price, isAuction);
+                if (result.success) {
+                    showToast('✅ Канал выставлен!', 'success');
+                    refreshData();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // ADMIN FUNCTIONS
+        // ============================================================
+        function adminGiveBalance() {
+            const html = `
+                <div class="form-group">
+                    <label class="form-label">ID пользователя</label>
+                    <input class="form-input" id="adminUserId" type="number" placeholder="Telegram ID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Сумма (⭐)</label>
+                    <input class="form-input" id="adminBalanceAmount" type="number" placeholder="Количество Stars">
+                </div>
+                <button class="btn btn-success" onclick="adminGiveBalanceSubmit()">Выдать</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('💰 Выдать баланс', html);
+        }
+
+        async function adminGiveBalanceSubmit() {
+            const userId = parseInt(document.getElementById('adminUserId').value);
+            const amount = parseInt(document.getElementById('adminBalanceAmount').value);
+
+            if (isNaN(userId) || isNaN(amount) || amount <= 0) {
+                showToast('Введите корректные данные', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Выдача баланса...', 'info');
+
+            try {
+                const result = await api.giveBalance(userId, amount);
+                if (result.success) {
+                    showToast(`✅ ${amount} ⭐ выдано пользователю ${userId}`, 'success');
+                    renderAdmin();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        function adminBroadcast() {
+            const html = `
+                <div class="form-group">
+                    <label class="form-label">Сообщение для рассылки</label>
+                    <textarea class="form-input" id="broadcastMsg" rows="4" placeholder="Текст сообщения..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="adminBroadcastSubmit()">Отправить</button>
+                <button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal()">Назад</button>
+            `;
+            openModal('📢 Рассылка', html);
+        }
+
+        async function adminBroadcastSubmit() {
+            const msg = document.getElementById('broadcastMsg').value.trim();
+            if (!msg) {
+                showToast('Введите сообщение', 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('Отправка рассылки...', 'info');
+
+            try {
+                const result = await api.broadcast(msg);
+                if (result.success) {
+                    showToast(`✅ Рассылка отправлена ${result.sent} пользователям`, 'success');
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        async function adminApprove(id) {
+            try {
+                const result = await api.approveWithdraw(id);
+                if (result.success) {
+                    showToast('✅ Заявка подтверждена', 'success');
+                    renderAdmin();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        async function adminReject(id) {
+            if (!confirm('Отклонить заявку?')) return;
+
+            try {
+                const result = await api.rejectWithdraw(id);
+                if (result.success) {
+                    showToast('❌ Заявка отклонена', 'error');
+                    renderAdmin();
+                } else {
+                    showToast('❌ ' + (result.error || 'Ошибка'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function navigate(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+            const pageMap = {
+                'market': 'pageMarket',
+                'auctions': 'pageAuctions',
+                'profile': 'pageProfile',
+                'admin': 'pageAdmin'
             };
-            
-            for (var j = 0; j < navItems.length; j++) {
-                var item = navItems[j];
-                var itemText = item.textContent.trim().toLowerCase();
-                navItems[j].classList.toggle('active', itemText === tabNames[tab]);
-            }
-            
-            renderCurrentTab();
-        }
 
-        function viewChannel(channelId) {
-            var channel = null;
-            for (var i = 0; i < channels.length; i++) {
-                if (channels[i].id === channelId) {
-                    channel = channels[i];
+            $(pageMap[page]).classList.add('active');
+            const navBtn = document.querySelector(`[data-page="${page}"]`);
+            if (navBtn) navBtn.classList.add('active');
+
+            switch (page) {
+                case 'market':
+                    renderMarket();
                     break;
-                }
-            }
-            
-            if (!channel) {
-                showToast('❌ Канал не найден');
-                return;
-            }
-
-            if (channel.is_auction === 1) {
-                openBidModal(channel);
-            } else {
-                openBuyModal(channel);
+                case 'auctions':
+                    renderAuctions();
+                    break;
+                case 'profile':
+                    renderProfile();
+                    break;
+                case 'admin':
+                    renderAdmin();
+                    break;
             }
         }
 
-        function openBuyModal(channel) {
-            currentChannelId = channel.id;
-            
-            var sellerInfo = channel.seller_username ? '👤 Продавец: @' + channel.seller_username : '';
-            
-            document.getElementById('buyInfo').innerHTML = 
-                '<strong>' + channel.title + '</strong><br>' +
-                '@' + channel.username + '<br>' +
-                '💰 Цена: <strong>' + channel.price + ' ⭐</strong><br>' +
-                sellerInfo + '<br><br>' +
-                '⚠️ После покупки нужно подтвердить передачу канала.<br>' +
-                '📦 У вас есть <strong>24 часа</strong> на проверку.';
-            
-            document.getElementById('buyModal').classList.add('active');
+        // ============================================================
+        // BALANCE
+        // ============================================================
+        function updateBalanceDisplay() {
+            $('balanceDisplay').textContent = state.balance;
         }
 
-        function closeBuyModal() {
-            document.getElementById('buyModal').classList.remove('active');
-            currentChannelId = null;
+        function refreshBalance() {
+            renderProfile();
         }
 
-        async function confirmBuy() {
-            if (!currentChannelId) return;
-            
-            try {
-                var result = await apiCall('/api/buy/' + currentChannelId, {
-                    method: 'POST'
-                });
-                
-                showToast('✅ Канал куплен! Ожидайте передачи.', 5000);
-                closeBuyModal();
-                await loadData();
-                
-                setTimeout(function() {
-                    openTransferModal(result.deal_id);
-                }, 1000);
-                
-            } catch (error) {
-                showToast('❌ ' + error.message);
-            }
-        }
-
-        function openBidModal(channel) {
-            currentChannelId = channel.id;
-            
-            var currentBid = channel.auction_current_bid || channel.price || 0;
-            var minBid = currentBid + 1;
-            
-            document.getElementById('bidInfo').innerHTML = 
-                '<strong>' + channel.title + '</strong><br>' +
-                '@' + channel.username + '<br>' +
-                '💰 Текущая ставка: <strong>' + currentBid + ' ⭐</strong><br>' +
-                '📈 Минимальная ставка: <strong>' + minBid + ' ⭐</strong><br><br>' +
-                '⚠️ Ставка блокируется до окончания аукциона.';
-            
-            document.getElementById('bidAmount').value = minBid;
-            document.getElementById('bidAmount').min = minBid;
-            document.getElementById('bidModal').classList.add('active');
-        }
-
-        function closeBidModal() {
-            document.getElementById('bidModal').classList.remove('active');
-            currentChannelId = null;
-        }
-
-        async function submitBid() {
-            if (!currentChannelId) return;
-            
-            var amount = parseInt(document.getElementById('bidAmount').value);
-            if (!amount || amount <= 0) {
-                showToast('❌ Введите корректную сумму');
-                return;
-            }
-            
-            try {
-                var result = await apiCall('/api/bid/' + currentChannelId, {
-                    method: 'POST',
-                    body: JSON.stringify({ amount: amount })
-                });
-                
-                showToast('✅ Ставка ' + amount + ' ⭐ принята! Вы лидируете.', 3000);
-                closeBidModal();
-                await loadData();
-                
-            } catch (error) {
-                showToast('❌ ' + error.message);
-            }
-        }
-
-        function openTransferModal(dealId) {
-            currentDealId = dealId;
-            
-            document.getElementById('transferInfo').innerHTML = 
-                '📦 <strong>Сделка #' + dealId + '</strong><br><br>' +
-                '✅ Оплата прошла успешно!<br>' +
-                '⏳ Ожидайте, пока продавец передаст вам канал.<br><br>' +
-                '📌 После получения канала нажмите "Подтвердить передачу".<br><br>' +
-                '⏰ Время на передачу: <strong>24 часа</strong><br>' +
-                '💡 Если продавец не передаст канал, деньги вернутся на баланс.';
-            
-            document.getElementById('transferModal').classList.add('active');
-        }
-
-        function closeTransferModal() {
-            document.getElementById('transferModal').classList.remove('active');
-            currentDealId = null;
-        }
-
-        async function checkTransfer(dealId) {
-            try {
-                var result = await apiCall('/api/check_transfer/' + dealId);
-                
-                if (result.status === 'completed') {
-                    showToast('✅ Сделка уже завершена!', 3000);
-                    await loadData();
-                    return;
-                }
-                
-                if (result.status === 'waiting') {
-                    var timeLeft = result.time_left || 0;
-                    var hours = Math.floor(timeLeft / 3600);
-                    var minutes = Math.floor((timeLeft % 3600) / 60);
-                    
-                    document.getElementById('transferInfo').innerHTML = 
-                        '📦 <strong>Сделка #' + dealId + '</strong><br><br>' +
-                        '⏳ Ожидайте передачи канала.<br>' +
-                        '⏰ Осталось: <strong>' + hours + 'ч ' + minutes + 'м</strong><br><br>' +
-                        '📌 После получения канала нажмите "Подтвердить передачу".';
-                    
-                    document.getElementById('transferModal').classList.add('active');
-                    showToast('⏳ Ожидайте передачи канала', 3000);
-                }
-                
-            } catch (error) {
-                showToast('❌ ' + error.message);
-            }
-        }
-
-        async function confirmTransfer() {
-            if (!currentDealId) {
-                showToast('❌ Неизвестная сделка');
-                return;
-            }
-            
-            try {
-                var result = await apiCall('/api/confirm_transfer', {
-                    method: 'POST',
-                    body: JSON.stringify({ deal_id: currentDealId })
-                });
-                
-                if (result.status === 'completed') {
-                    showToast('✅ Сделка завершена! Средства переведены продавцу.', 5000);
-                    closeTransferModal();
-                    await loadData();
-                    
-                    setTimeout(function() {
-                        switchTab('profile');
-                    }, 1500);
-                }
-                
-            } catch (error) {
-                showToast('❌ ' + error.message);
-            }
-        }
-
-        function openBot() {
-            if (window.Telegram?.WebApp) {
-                window.Telegram.WebApp.openTelegramLink(BOT_URL);
-            } else {
-                window.open(BOT_URL, '_blank');
+        async function refreshData() {
+            showToast('Обновление...', 'info');
+            await Promise.all([
+                renderMarket(),
+                renderAuctions(),
+                renderProfile()
+            ]);
+            if (state.adminMode) {
+                await renderAdmin();
             }
         }
 
         // ============================================================
         // INIT
         // ============================================================
+        function init() {
+            document.body.classList.add('tg-theme');
 
-        console.log('🌟 Username Market');
-        console.log('📡 API URL:', getApiUrl());
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var select = document.getElementById('serverSelect');
-            var currentUrl = getApiUrl();
-            for (var i = 0; i < select.options.length; i++) {
-                if (select.options[i].value === currentUrl) {
-                    select.options[i].selected = true;
-                    break;
-                }
+            const userId = tg.initDataUnsafe?.user?.id;
+            const ADMIN_IDS = [8102526978];
+            if (userId && ADMIN_IDS.includes(userId)) {
+                document.getElementById('navAdmin').style.display = 'block';
+                state.adminMode = true;
             }
-        });
 
-        (async function init() {
-            try {
-                var token = localStorage.getItem('token');
-                if (!token) {
-                    token = await autoAuth();
-                }
-                
-                if (token) {
-                    console.log('✅ Авторизация успешна');
-                    await loadData();
-                    
-                    if (userData) {
-                        var name = userData.username || 'Пользователь';
-                        showToast('👋 Добро пожаловать, ' + name + '!', 2000);
-                    }
-                } else {
-                    document.getElementById('channelList').innerHTML = `
-                        <div class="empty-state">
-                            <div class="icon">🔑</div>
-                            <div class="title">Требуется авторизация</div>
-                            <div class="subtitle">Пожалуйста, войдите в аккаунт через Telegram</div>
-                            <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Init error:', error);
-                document.getElementById('channelList').innerHTML = `
-                    <div class="empty-state">
-                        <div class="icon">⚠️</div>
-                        <div class="title">Ошибка инициализации</div>
-                        <div class="subtitle">${error.message || 'Попробуйте обновить страницу'}</div>
-                        <button class="retry-btn" onclick="location.reload()">🔄 Обновить</button>
-                    </div>
-                `;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const page = btn.dataset.page;
+                    if (page) navigate(page);
+                });
+            });
+
+            document.getElementById('modalOverlay').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeModal();
+            });
+
+            renderMarket();
+            renderAuctions();
+            renderProfile();
+            if (state.adminMode) {
+                renderAdmin();
             }
-        })();
 
-        setInterval(function() {
-            if (currentTab === 'profile' || currentTab === 'deals') {
-                (async function() {
-                    try {
-                        var [balanceData, userInfo] = await Promise.all([
-                            apiCall('/api/user/balance'),
-                            apiCall('/api/user/me')
-                        ]);
-                        userData = userInfo.data || null;
-                        pendingDeals = userData?.pending_deals || [];
-                        
-                        if (userData && userData.avatar) {
-                            avatarData = userData.avatar;
-                        }
-                        
-                        updateBalance(balanceData.balance || 0);
-                        updateDealBadge();
-                        if (currentTab === 'profile') renderProfile();
-                        else if (currentTab === 'deals') renderDeals();
-                    } catch(e) {}
-                })();
-            } else {
-                loadData();
-            }
-        }, 30000);
+            setInterval(() => {
+                if (!document.querySelector('.modal-overlay.active')) {
+                    refreshData();
+                }
+            }, 30000);
+        }
 
-        document.getElementById('bidModal').addEventListener('click', function(e) {
-            if (e.target === this) closeBidModal();
-        });
-        
-        document.getElementById('buyModal').addEventListener('click', function(e) {
-            if (e.target === this) closeBuyModal();
-        });
-        
-        document.getElementById('transferModal').addEventListener('click', function(e) {
-            if (e.target === this) closeTransferModal();
-        });
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
