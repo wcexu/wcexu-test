@@ -4,198 +4,467 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Username Market</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* ============================================================
+           ROOT VARIABLES
+           ============================================================ */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #22223a;
+            --bg-input: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #8899aa;
+            --text-muted: #556677;
+            --accent: #6c5ce7;
+            --accent-hover: #7d6ff0;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --success: #00b894;
+            --success-glow: rgba(0, 184, 148, 0.3);
+            --danger: #ff6b6b;
+            --warning: #fdcb6e;
+            --border: #2a2a3e;
+            --border-light: #3a3a5e;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(108, 92, 231, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0f;
-            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 12px;
-            padding-bottom: 80px;
+            padding: 16px;
+            padding-bottom: 90px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Скрываем скроллбар */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 4px 16px 4px;
-            border-bottom: 1px solid #2a2a3e;
+            padding: 8px 0 16px 0;
+            border-bottom: 1px solid var(--border);
             margin-bottom: 16px;
         }
 
-        .header-title {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), #a29bfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-logo-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            -webkit-text-fill-color: var(--text-secondary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .header-balance {
             display: flex;
             align-items: center;
-            gap: 6px;
-            background: #14141c;
-            padding: 6px 14px;
+            gap: 8px;
+            background: var(--bg-secondary);
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
-            font-weight: 600;
-            border: 1px solid #2a2a3e;
+            font-weight: 700;
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            position: relative;
         }
 
         .header-balance:hover {
-            border-color: #6c5ce7;
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow);
         }
 
-        .star { color: #fdcb6e; }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            background: #14141c;
-            border-radius: 10px;
-            padding: 4px;
-            overflow-x: auto;
+        .header-balance .star {
+            font-size: 16px;
         }
 
-        .tab-btn {
-            flex: 1;
-            min-width: 60px;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            background: transparent;
-            color: #8899aa;
+        .header-balance .amount {
+            color: var(--warning);
+        }
+
+        .header-balance .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .refresh-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 20px;
             font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .refresh-btn:active { transform: scale(0.95); }
+
+        /* ============================================================
+           SERVER SETTINGS
+           ============================================================ */
+        .server-settings {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .server-selector {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238899aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .server-selector:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .connection-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
             white-space: nowrap;
         }
 
+        .status-online {
+            background: rgba(0, 184, 148, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 184, 148, 0.3);
+        }
+
+        .status-offline {
+            background: rgba(255, 107, 107, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* ============================================================
+           TABS
+           ============================================================ */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 56px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
         .tab-btn.active {
-            background: #6c5ce7;
+            background: var(--accent);
             color: #fff;
+            box-shadow: 0 4px 16px var(--accent-glow);
         }
 
         .tab-btn:not(.active):hover {
-            background: #1c1c2e;
-            color: #ffffff;
+            background: var(--bg-card);
+            color: var(--text-primary);
         }
 
+        /* ============================================================
+           STATS
+           ============================================================ */
         .stats-row {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-bottom: 16px;
         }
 
         .stat-card {
-            background: #14141c;
-            border-radius: 10px;
-            padding: 12px 14px;
-            border: 1px solid #2a2a3e;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-light);
         }
 
         .stat-card .label {
-            font-size: 11px;
-            color: #8899aa;
+            font-size: 10px;
+            color: var(--text-secondary);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .stat-card .value {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
             margin-top: 2px;
+            letter-spacing: -0.5px;
         }
 
-        .stat-card .value.accent { color: #6c5ce7; }
-        .stat-card .value.success { color: #00b894; }
-        .stat-card .value.warning { color: #fdcb6e; }
-        .stat-card .value.danger { color: #ff6b6b; }
+        .stat-card .value.accent { color: var(--accent); }
+        .stat-card .value.success { color: var(--success); }
+        .stat-card .value.warning { color: var(--warning); }
+        .stat-card .value.danger { color: var(--danger); }
 
+        /* ============================================================
+           CHANNEL LIST
+           ============================================================ */
         .channel-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .channel-card {
-            background: #14141c;
-            border-radius: 10px;
-            padding: 14px 16px;
-            border: 1px solid #2a2a3e;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        .channel-card:nth-child(1) { animation-delay: 0.05s; }
+        .channel-card:nth-child(2) { animation-delay: 0.10s; }
+        .channel-card:nth-child(3) { animation-delay: 0.15s; }
+        .channel-card:nth-child(4) { animation-delay: 0.20s; }
+        .channel-card:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .channel-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-card-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
         }
 
         .channel-card:active { transform: scale(0.98); }
 
         .channel-card .title {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 2px;
         }
 
         .channel-card .username {
             font-size: 13px;
-            color: #8899aa;
-            margin-bottom: 6px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
         }
 
         .channel-card .meta {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-size: 13px;
-            color: #8899aa;
+            color: var(--text-secondary);
             flex-wrap: wrap;
         }
 
         .channel-card .meta .price {
-            color: #fdcb6e;
+            color: var(--warning);
             font-weight: 700;
+            font-size: 15px;
         }
 
+        .channel-card .bid-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid var(--border);
+        }
+
+        .channel-card .bid-info strong {
+            color: var(--text-primary);
+        }
+
+        /* Badges */
         .badge {
-            padding: 2px 10px;
+            padding: 3px 12px;
             border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        .badge.fixed { background: rgba(0, 184, 148, 0.2); color: #00b894; }
-        .badge.auction { background: rgba(253, 203, 110, 0.2); color: #fdcb6e; }
-        .badge.sold { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
-        .badge.waiting { background: rgba(108, 92, 231, 0.2); color: #6c5ce7; }
 
+        .badge.fixed { 
+            background: rgba(0, 184, 148, 0.15); 
+            color: var(--success);
+            border: 1px solid rgba(0, 184, 148, 0.3);
+        }
+
+        .badge.auction { 
+            background: rgba(253, 203, 110, 0.15); 
+            color: var(--warning);
+            border: 1px solid rgba(253, 203, 110, 0.3);
+        }
+
+        .badge.sold { 
+            background: rgba(255, 107, 107, 0.15); 
+            color: var(--danger);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .badge.waiting { 
+            background: rgba(108, 92, 231, 0.15); 
+            color: var(--accent);
+            border: 1px solid rgba(108, 92, 231, 0.3);
+        }
+
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #8899aa;
+            padding: 60px 20px;
+            color: var(--text-secondary);
         }
 
-        .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+        .empty-state .icon { font-size: 56px; margin-bottom: 16px; }
         .empty-state .title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 4px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .empty-state .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
+        .retry-btn {
+            margin-top: 16px;
+            padding: 12px 32px;
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .retry-btn:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .retry-btn:active { transform: scale(0.95); }
+
+        /* ============================================================
+           BOTTOM NAVIGATION
+           ============================================================ */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #14141c;
-            border-top: 1px solid #2a2a3e;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
             display: flex;
-            padding: 8px 0;
+            padding: 6px 0;
+            padding-bottom: env(safe-area-inset-bottom, 8px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 100;
         }
 
@@ -207,85 +476,89 @@
             gap: 2px;
             border: none;
             background: transparent;
-            color: #8899aa;
-            font-size: 10px;
-            padding: 4px 0;
+            color: var(--text-secondary);
+            font-size: 9px;
+            font-weight: 600;
+            padding: 6px 0;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            position: relative;
         }
 
         .nav-item .nav-icon { font-size: 22px; }
-        .nav-item.active { color: #6c5ce7; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item:not(.active):hover { color: var(--text-primary); }
 
+        .nav-item .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 50%;
+            transform: translateX(50%) translateX(14px);
+            background: var(--danger);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           LOADING
+           ============================================================ */
         .loading {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 0;
+            padding: 60px 0;
         }
 
         .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid #2a2a3e;
-            border-top-color: #6c5ce7;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* ============================================================
+           TOAST
+           ============================================================ */
         .toast {
             position: fixed;
             top: 20px;
             left: 50%;
-            transform: translateX(-50%);
-            background: #1c1c2e;
-            padding: 12px 20px;
-            border-radius: 10px;
-            border: 1px solid #2a2a3e;
+            transform: translateX(-50%) translateY(-20px);
+            background: var(--bg-card);
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
             font-size: 14px;
+            font-weight: 500;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             max-width: 90%;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
-        .toast.show { opacity: 1; }
-
-        .refresh-btn {
-            background: #14141c;
-            border: 1px solid #2a2a3e;
-            color: #8899aa;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
-        .refresh-btn:active { transform: scale(0.95); }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .retry-btn {
-            margin-top: 12px;
-            padding: 10px 24px;
-            background: #6c5ce7;
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .retry-btn:active { transform: scale(0.95); }
-
+        /* ============================================================
+           MODALS
+           ============================================================ */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -293,184 +566,449 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 999;
             padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-overlay.active { display: flex; }
 
         .modal {
-            background: #14141c;
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 400px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 420px;
             width: 100%;
-            border: 1px solid #2a2a3e;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            animation: slideUp 0.4s ease;
         }
 
         .modal-title {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             margin-bottom: 16px;
+            letter-spacing: -0.5px;
         }
 
         .modal input {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #2a2a3e;
-            background: #1c1c2e;
-            color: #ffffff;
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 16px;
+            font-weight: 500;
             margin-bottom: 12px;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
         }
 
         .modal input:focus {
             outline: none;
-            border-color: #6c5ce7;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .modal input::placeholder {
+            color: var(--text-muted);
         }
 
         .modal-buttons {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .modal-buttons button {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
         }
 
         .modal-buttons button:active { transform: scale(0.95); }
 
-        .btn-primary { background: #6c5ce7; color: #fff; }
-        .btn-secondary { background: #1c1c2e; color: #8899aa; }
-        .btn-success { background: #00b894; color: #fff; }
-        .btn-danger { background: #ff6b6b; color: #fff; }
-
-        .bid-info-text {
-            color: #8899aa;
-            margin-bottom: 12px;
-            font-size: 14px;
-            line-height: 1.6;
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
         }
 
-        .bid-info-text strong { color: #ffffff; }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
 
-        /* Profile styles */
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 4px 20px var(--success-glow);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .bid-info-text {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .bid-info-text strong {
+            color: var(--text-primary);
+        }
+
+        /* ============================================================
+           PROFILE
+           ============================================================ */
         .profile-card {
-            background: #14141c;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #2a2a3e;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border);
             margin-bottom: 16px;
         }
 
         .profile-avatar {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background: linear-gradient(135deg, var(--accent), #a29bfe);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 12px;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px var(--accent-glow);
         }
 
         .profile-name {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             margin-bottom: 4px;
+            letter-spacing: -0.5px;
         }
 
         .profile-username {
             font-size: 14px;
-            color: #8899aa;
-            margin-bottom: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .balance-big {
+            background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin: 16px 0;
+            text-align: center;
+            border: 1px solid var(--accent);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .balance-big .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .balance-big .amount {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--warning);
+            letter-spacing: -1px;
         }
 
         .profile-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-top: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 16px;
         }
 
         .profile-stat {
-            background: #1c1c2e;
-            padding: 10px;
-            border-radius: 8px;
+            background: var(--bg-card);
+            padding: 14px;
+            border-radius: var(--radius-sm);
             text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .profile-stat:hover {
+            border-color: var(--border-light);
         }
 
         .profile-stat .value {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .profile-stat .label {
-            font-size: 11px;
-            color: #8899aa;
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-top: 2px;
         }
 
-        .profile-stat .value.accent { color: #6c5ce7; }
-        .profile-stat .value.success { color: #00b894; }
-        .profile-stat .value.warning { color: #fdcb6e; }
-        .profile-stat .value.danger { color: #ff6b6b; }
+        .profile-stat .value.accent { color: var(--accent); }
+        .profile-stat .value.success { color: var(--success); }
+        .profile-stat .value.warning { color: var(--warning); }
+        .profile-stat .value.danger { color: var(--danger); }
 
-        .balance-big {
-            background: linear-gradient(135deg, #1c1c2e, #2a2a3e);
-            border-radius: 12px;
-            padding: 16px;
-            margin: 12px 0;
-            text-align: center;
-            border: 1px solid #6c5ce7;
+        .profile-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
         }
 
-        .balance-big .amount {
-            font-size: 32px;
+        .profile-actions button {
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-sm);
             font-weight: 700;
-            color: #fdcb6e;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
         }
 
-        .balance-big .label {
-            font-size: 14px;
-            color: #8899aa;
+        .profile-actions button:active { transform: scale(0.95); }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        /* ============================================================
+           DEALS
+           ============================================================ */
+        .deal-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--warning);
+            transition: var(--transition);
+        }
+
+        .deal-card:hover {
+            border-color: var(--border-light);
+        }
+
+        .deal-card .deal-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .deal-card .deal-info {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .deal-card .deal-status {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid var(--border);
+        }
+
+        .status-waiting { color: var(--warning); }
+        .status-completed { color: var(--success); }
+        .status-cancelled { color: var(--danger); }
+
+        .deal-card .deal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .deal-card .deal-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .deal-card .deal-actions button:active { transform: scale(0.95); }
+
+        /* ============================================================
+           RESPONSIVE - ДЛЯ ТЕЛЕФОНОВ
+           ============================================================ */
+        @media (max-width: 480px) {
+            body { padding: 12px; padding-bottom: 80px; }
+            
+            .header-logo { font-size: 18px; }
+            .header-balance { padding: 6px 12px; font-size: 12px; }
+            .header-balance .amount { font-size: 14px; }
+            
+            .tab-btn { font-size: 11px; padding: 8px 10px; min-width: 44px; }
+            
+            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .stat-card { padding: 10px 12px; }
+            .stat-card .value { font-size: 16px; }
+            .stat-card .label { font-size: 8px; }
+            
+            .channel-card { padding: 14px; }
+            .channel-card .title { font-size: 14px; }
+            
+            .modal { padding: 20px; }
+            .modal-title { font-size: 18px; }
+            
+            .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .profile-stat { padding: 10px; }
+            .profile-stat .value { font-size: 16px; }
+            
+            .balance-big .amount { font-size: 32px; }
+            
+            .profile-actions { grid-template-columns: 1fr; }
+            
+            .server-settings { flex-direction: column; }
+            .server-selector { min-width: 100%; }
+            
+            .bottom-nav { padding: 4px 0; }
+            .nav-item .nav-icon { font-size: 18px; }
+            .nav-item { font-size: 8px; }
+        }
+
+        /* ============================================================
+           RESPONSIVE - ДЛЯ ПЛАНШЕТОВ
+           ============================================================ */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .profile-stats { grid-template-columns: repeat(3, 1fr); }
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* ============================================================
+           RESPONSIVE - ДЛЯ ПК
+           ============================================================ */
+        @media (min-width: 769px) {
+            body {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 24px;
+                padding-bottom: 100px;
+            }
+
+            .channel-card:hover {
+                transform: translateY(-2px);
+            }
+
+            .stats-row { gap: 16px; }
+            .stat-card { padding: 18px 20px; }
+            
+            .tabs { gap: 10px; }
+            .tab-btn { padding: 12px 20px; font-size: 14px; }
+            
+            .modal { padding: 36px; max-width: 480px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ============================================================
+    TOAST
+    ============================================================ -->
     <div class="toast" id="toast"></div>
 
-    <div class="header">
-        <div class="header-title">🌟 Username Market</div>
-        <div class="header-actions">
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <header class="header">
+        <div class="header-left">
+            <div>
+                <div class="header-logo">✦ Market</div>
+                <div class="header-logo-sub">Username</div>
+            </div>
+        </div>
+        <div class="header-right">
             <button class="refresh-btn" onclick="loadData()">⟳</button>
             <div class="header-balance" onclick="switchTab('profile')">
                 <span class="star">⭐</span>
-                <span id="balanceDisplay">0</span>
+                <span class="amount" id="balanceDisplay">0</span>
+                <span class="badge" id="dealBadge" style="display:none;"></span>
             </div>
         </div>
+    </header>
+
+    <!-- ============================================================
+    SERVER SETTINGS
+    ============================================================ -->
+    <div class="server-settings">
+        <select id="serverSelect" class="server-selector" onchange="changeServer()">
+            <option value="http://localhost:8080">🖥️ Локальный сервер</option>
+            <option value="http://192.168.1.100:8080">📱 Локальная сеть</option>
+            <option value="https://your-domain.com">🌍 Продакшен</option>
+        </select>
+        <span id="statusIndicator" class="connection-status status-online">✅ Онлайн</span>
     </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">Все</button>
+    <!-- ============================================================
+    TABS
+    ============================================================ -->
+    <div class="tabs" id="tabsContainer">
+        <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📊 Все</button>
         <button class="tab-btn" data-tab="fixed" onclick="switchTab('fixed')">📢 Фикс</button>
         <button class="tab-btn" data-tab="auction" onclick="switchTab('auction')">🔨 Аукционы</button>
         <button class="tab-btn" data-tab="my" onclick="switchTab('my')">👤 Мои</button>
-        <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">📋 Профиль</button>
+        <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">👤 Профиль</button>
+        <button class="tab-btn" data-tab="deals" onclick="switchTab('deals')">📦 Сделки</button>
     </div>
 
+    <!-- ============================================================
+    STATS
+    ============================================================ -->
     <div class="stats-row" id="statsRow">
         <div class="stat-card">
             <div class="label">Всего</div>
@@ -486,11 +1024,18 @@
         </div>
     </div>
 
+    <!-- ============================================================
+    CONTENT
+    ============================================================ -->
     <div id="channelList">
         <div class="loading"><div class="spinner"></div></div>
     </div>
 
-    <!-- Modal для ставки -->
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- BID MODAL -->
     <div class="modal-overlay" id="bidModal">
         <div class="modal">
             <div class="modal-title">🔨 Сделать ставку</div>
@@ -503,7 +1048,7 @@
         </div>
     </div>
 
-    <!-- Modal для покупки -->
+    <!-- BUY MODAL -->
     <div class="modal-overlay" id="buyModal">
         <div class="modal">
             <div class="modal-title">📢 Подтверждение покупки</div>
@@ -515,7 +1060,22 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
+    <!-- TRANSFER MODAL -->
+    <div class="modal-overlay" id="transferModal">
+        <div class="modal">
+            <div class="modal-title">📦 Проверка передачи</div>
+            <div class="bid-info-text" id="transferInfo"></div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeTransferModal()">Закрыть</button>
+                <button class="btn-success" onclick="confirmTransfer()">✅ Подтвердить передачу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    BOTTOM NAVIGATION
+    ============================================================ -->
+    <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('all')">
             <span class="nav-icon">📊</span>
             <span>Все</span>
@@ -529,30 +1089,33 @@
             <span>Мои</span>
         </button>
         <button class="nav-item" onclick="switchTab('profile')">
-            <span class="nav-icon">📋</span>
+            <span class="nav-icon">👤</span>
             <span>Профиль</span>
         </button>
-        <button class="nav-item" onclick="openBot()">
-            <span class="nav-icon">🤖</span>
-            <span>Бот</span>
+        <button class="nav-item" onclick="switchTab('deals')">
+            <span class="nav-icon">📦</span>
+            <span>Сделки</span>
+            <span class="nav-badge" id="dealBadgeNav" style="display:none;">0</span>
         </button>
-    </div>
+    </nav>
 
     <script>
         // ============================================================
         // CONFIG
         // ============================================================
 
-        const API_URL = 'http://localhost:8080';
         const BOT_USERNAME = 'UsernameSalerobot';
         const BOT_URL = 'https://t.me/' + BOT_USERNAME;
+        const DEAL_TIMEOUT = 86400;
         
         let currentChannelId = null;
+        let currentDealId = null;
         let currentTab = 'all';
         let channels = [];
         let myChannels = [];
         let userData = null;
         let myUserId = null;
+        let pendingDeals = [];
 
         // ============================================================
         // TOAST
@@ -560,7 +1123,8 @@
 
         let toastTimeout;
 
-        function showToast(message) {
+        function showToast(message, duration) {
+            duration = duration || 3000;
             var toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
@@ -568,28 +1132,40 @@
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(function() {
                 toast.classList.remove('show');
-            }, 3000);
+            }, duration);
         }
 
         // ============================================================
-        // AUTH - ГЕНЕРАЦИЯ ТОКЕНА
+        // API URL
         // ============================================================
 
-        async function getToken() {
-            var token = localStorage.getItem('token');
-            if (token) {
-                return token;
-            }
+        function getApiUrl() {
+            return localStorage.getItem('api_url') || 'http://localhost:8080';
+        }
 
+        function setApiUrl(url) {
+            localStorage.setItem('api_url', url);
+        }
+
+        // ============================================================
+        // АВТОМАТИЧЕСКАЯ АВТОРИЗАЦИЯ
+        // ============================================================
+
+        async function autoAuth() {
             var tg = window.Telegram?.WebApp;
             var user_id = null;
             var username = null;
+            var first_name = null;
+            var last_name = null;
             
             if (tg && tg.initDataUnsafe?.user) {
                 user_id = tg.initDataUnsafe.user.id;
-                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
+                username = tg.initDataUnsafe.user.username || null;
+                first_name = tg.initDataUnsafe.user.first_name || null;
+                last_name = tg.initDataUnsafe.user.last_name || null;
+                console.log('👤 Авторизация через Telegram:', user_id, username);
             } else {
-                var input = prompt('Введите ваш Telegram ID:');
+                var input = prompt('👤 Введите ваш Telegram ID:');
                 if (input) {
                     user_id = parseInt(input);
                 } else {
@@ -604,14 +1180,14 @@
             }
 
             try {
-                var response = await fetch(API_URL + '/api/generate_token', {
+                var response = await fetch(getApiUrl() + '/api/auth', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         user_id: user_id,
-                        username: username 
+                        username: username,
+                        first_name: first_name,
+                        last_name: last_name
                     })
                 });
                 
@@ -621,7 +1197,7 @@
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user_id', data.user_id);
                     myUserId = data.user_id;
-                    showToast('✅ Авторизация выполнена');
+                    showToast('✅ Авторизация выполнена для ID: ' + user_id);
                     return data.token;
                 } else {
                     showToast('❌ Ошибка авторизации: ' + data.error);
@@ -643,13 +1219,13 @@
             
             var token = localStorage.getItem('token');
             if (!token) {
-                token = await getToken();
+                token = await autoAuth();
                 if (!token) {
                     throw new Error('Не удалось авторизоваться');
                 }
             }
             
-            var url = API_URL + endpoint;
+            var url = getApiUrl() + endpoint;
             
             try {
                 var response = await fetch(url, {
@@ -663,7 +1239,7 @@
                 
                 if (response.status === 401) {
                     localStorage.removeItem('token');
-                    token = await getToken();
+                    token = await autoAuth();
                     if (!token) {
                         throw new Error('Ошибка авторизации');
                     }
@@ -697,6 +1273,42 @@
         }
 
         // ============================================================
+        // ПРОВЕРКА ПОДКЛЮЧЕНИЯ
+        // ============================================================
+
+        async function checkConnection() {
+            try {
+                var response = await fetch(getApiUrl() + '/api/channels', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                var status = document.getElementById('statusIndicator');
+                if (response.ok) {
+                    status.textContent = '✅ Онлайн';
+                    status.className = 'connection-status status-online';
+                    return true;
+                } else {
+                    status.textContent = '⚠️ Ошибка';
+                    status.className = 'connection-status status-offline';
+                    return false;
+                }
+            } catch (error) {
+                var status = document.getElementById('statusIndicator');
+                status.textContent = '❌ Офлайн';
+                status.className = 'connection-status status-offline';
+                return false;
+            }
+        }
+
+        function changeServer() {
+            var select = document.getElementById('serverSelect');
+            setApiUrl(select.value);
+            showToast('🔄 Сервер изменен на: ' + select.value);
+            loadData();
+        }
+
+        // ============================================================
         // LOAD DATA
         // ============================================================
 
@@ -704,6 +1316,8 @@
             try {
                 var container = document.getElementById('channelList');
                 container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                
+                await checkConnection();
                 
                 var [channelsData, balanceData, userInfo] = await Promise.all([
                     apiCall('/api/channels'),
@@ -713,13 +1327,21 @@
                 
                 channels = channelsData.data || [];
                 userData = userInfo.data || null;
+                pendingDeals = userData?.pending_deals || [];
                 updateBalance(balanceData.balance || 0);
                 updateStats();
+                updateDealBadge();
                 
                 if (currentTab === 'profile') {
                     renderProfile();
+                } else if (currentTab === 'deals') {
+                    renderDeals();
                 } else {
                     renderCurrentTab();
+                }
+                
+                if (pendingDeals.length > 0) {
+                    showToast('📦 У вас есть активные сделки!', 4000);
                 }
                 
             } catch (error) {
@@ -727,9 +1349,7 @@
                     <div class="empty-state">
                         <div class="icon">⚠️</div>
                         <div class="title">Ошибка загрузки</div>
-                        <div style="font-size:14px; color:#8899aa;">
-                            ${error.message || 'Не удалось подключиться к API'}
-                        </div>
+                        <div class="subtitle">${error.message || 'Не удалось подключиться к API'}</div>
                         <button class="retry-btn" onclick="loadData()">🔄 Обновить</button>
                     </div>
                 `;
@@ -752,6 +1372,47 @@
         }
 
         // ============================================================
+        // UPDATE UI
+        // ============================================================
+
+        function updateBalance(balance) {
+            document.getElementById('balanceDisplay').textContent = balance;
+        }
+
+        function updateStats() {
+            var total = channels.length;
+            var auctions = 0;
+            var fixed = 0;
+            
+            for (var i = 0; i < channels.length; i++) {
+                if (channels[i].is_auction === 1) {
+                    auctions++;
+                } else {
+                    fixed++;
+                }
+            }
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('auctionCount').textContent = auctions;
+            document.getElementById('fixedCount').textContent = fixed;
+        }
+
+        function updateDealBadge() {
+            var count = pendingDeals.length;
+            var badge = document.getElementById('dealBadge');
+            var badgeNav = document.getElementById('dealBadgeNav');
+            
+            if (count > 0) {
+                badge.style.display = 'block';
+                badgeNav.style.display = 'block';
+                badgeNav.textContent = count;
+            } else {
+                badge.style.display = 'none';
+                badgeNav.style.display = 'none';
+            }
+        }
+
+        // ============================================================
         // RENDER PROFILE
         // ============================================================
 
@@ -763,15 +1424,12 @@
                     <div class="empty-state">
                         <div class="icon">👤</div>
                         <div class="title">Профиль не найден</div>
-                        <div style="font-size:14px; color:#8899aa;">
-                            Попробуйте обновить страницу
-                        </div>
+                        <div class="subtitle">Попробуйте обновить страницу</div>
                     </div>
                 `;
                 return;
             }
 
-            var username = userData.username || 'не указан';
             var displayName = userData.username ? '@' + userData.username : 'Пользователь';
             var firstLetter = displayName.charAt(1) || 'U';
             
@@ -805,26 +1463,32 @@
                         </div>
                         <div class="profile-stat">
                             <div class="value success">${userData.deals_bought_count || 0}</div>
-                            <div class="label">📥 Сделок куплено</div>
+                            <div class="label">📥 Сделок</div>
                         </div>
                         <div class="profile-stat">
                             <div class="value warning">${userData.deals_sold_count || 0}</div>
-                            <div class="label">📤 Сделок продано</div>
+                            <div class="label">📤 Продаж</div>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 12px; display: flex; gap: 8px;">
-                        <button onclick="switchTab('my')" style="flex:1; padding: 10px; background: #6c5ce7; border: none; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer;">
-                            📢 Мои каналы
-                        </button>
-                        <button onclick="openBot()" style="flex:1; padding: 10px; background: #14141c; border: 1px solid #2a2a3e; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer;">
-                            🤖 Бот
-                        </button>
+                    ${pendingDeals.length > 0 ? `
+                        <div style="margin-top:16px; padding:14px; background:#1a1a2e; border-radius:var(--radius-sm); border-left:4px solid var(--warning);">
+                            <div style="font-weight:700;">📦 Активные сделки: ${pendingDeals.length}</div>
+                            <button onclick="switchTab('deals')" style="margin-top:8px; padding:8px 20px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">
+                                Перейти к сделкам →
+                            </button>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="profile-actions">
+                        <button class="btn-primary" onclick="switchTab('my')">📢 Мои каналы</button>
+                        <button class="btn-outline" onclick="switchTab('deals')">📦 Сделки</button>
+                        <button class="btn-outline" onclick="openBot()" style="grid-column: span 2;">🤖 Открыть бота</button>
                     </div>
                 </div>
                 
-                <div style="font-size: 12px; color: #556677; text-align: center; padding: 8px;">
-                    🕐 Дата регистрации: ${new Date(userData.created_at * 1000).toLocaleDateString()}
+                <div style="text-align:center; font-size:12px; color:var(--text-muted); padding:8px;">
+                    🕐 Зарегистрирован: ${new Date(userData.created_at * 1000).toLocaleDateString()}
                 </div>
             `;
             
@@ -832,30 +1496,51 @@
         }
 
         // ============================================================
-        // RENDER CHANNELS
+        // RENDER DEALS
         // ============================================================
 
-        function updateStats() {
-            var total = channels.length;
-            var auctions = 0;
-            var fixed = 0;
+        function renderDeals() {
+            var container = document.getElementById('channelList');
             
-            for (var i = 0; i < channels.length; i++) {
-                if (channels[i].is_auction === 1) {
-                    auctions++;
-                } else {
-                    fixed++;
-                }
+            if (!pendingDeals || pendingDeals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📦</div>
+                        <div class="title">Нет активных сделок</div>
+                        <div class="subtitle">Все сделки завершены или отменены</div>
+                    </div>
+                `;
+                return;
             }
+
+            var html = '<div style="margin-bottom:12px;"><h3 style="font-weight:800;">📦 Активные сделки</h3></div><div class="channel-list">';
             
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('auctionCount').textContent = auctions;
-            document.getElementById('fixedCount').textContent = fixed;
+            for (var i = 0; i < pendingDeals.length; i++) {
+                var deal = pendingDeals[i];
+                var timeLeft = DEAL_TIMEOUT - (Date.now() / 1000 - deal.paid_at);
+                var hoursLeft = Math.floor(timeLeft / 3600);
+                var minutesLeft = Math.floor((timeLeft % 3600) / 60);
+                
+                html += `
+                    <div class="deal-card">
+                        <div class="deal-title">${deal.title || 'Канал'}</div>
+                        <div class="deal-info">@${deal.username || 'username'} • 💰 ${deal.price} ⭐</div>
+                        <div class="deal-info">🕐 Осталось: ${hoursLeft > 0 ? hoursLeft + 'ч ' : ''}${minutesLeft}м</div>
+                        <div class="deal-status status-waiting">⏳ Ожидает передачи</div>
+                        <div class="deal-actions">
+                            <button class="btn-primary" onclick="checkTransfer(${deal.id})">🔍 Проверить</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
         }
 
-        function updateBalance(balance) {
-            document.getElementById('balanceDisplay').textContent = balance;
-        }
+        // ============================================================
+        // RENDER CHANNELS
+        // ============================================================
 
         function renderChannels(channelsList, title) {
             title = title || '';
@@ -866,9 +1551,7 @@
                     <div class="empty-state">
                         <div class="icon">📭</div>
                         <div class="title">${title || 'Нет каналов'}</div>
-                        <div style="font-size:14px; color:#8899aa;">
-                            ${currentTab === 'my' ? 'Выставьте канал через бота' : 'Попробуйте обновить позже'}
-                        </div>
+                        <div class="subtitle">${currentTab === 'my' ? 'Выставьте канал через бота' : 'Попробуйте обновить позже'}</div>
                     </div>
                 `;
                 return;
@@ -911,7 +1594,7 @@
                             <span class="price">⭐ ${priceDisplay}</span>
                             <span class="badge ${badgeClass}">${badgeText}</span>
                             ${statusBadge}
-                            ${channel.seller_username ? '<span style="color:#8899aa;font-size:11px;">👤 @' + channel.seller_username + '</span>' : ''}
+                            ${channel.seller_username ? '<span style="color:var(--text-secondary);font-size:12px;">👤 @' + channel.seller_username + '</span>' : ''}
                         </div>
                         ${bidInfo}
                     </div>
@@ -927,10 +1610,15 @@
         }
 
         function renderCurrentTab() {
-            document.getElementById('statsRow').style.display = currentTab === 'profile' ? 'none' : 'grid';
+            document.getElementById('statsRow').style.display = (currentTab === 'profile' || currentTab === 'deals') ? 'none' : 'grid';
             
             if (currentTab === 'profile') {
                 renderProfile();
+                return;
+            }
+            
+            if (currentTab === 'deals') {
+                renderDeals();
                 return;
             }
             
@@ -967,34 +1655,30 @@
             var tabBtns = document.querySelectorAll('.tab-btn');
             for (var i = 0; i < tabBtns.length; i++) {
                 var btn = tabBtns[i];
-                if (btn.dataset.tab === tab) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+                btn.classList.toggle('active', btn.dataset.tab === tab);
             }
             
             var navItems = document.querySelectorAll('.nav-item');
+            var tabNames = {
+                'all': 'все',
+                'auction': 'аукционы',
+                'my': 'мои',
+                'profile': 'профиль',
+                'deals': 'сделки',
+                'fixed': 'фикс'
+            };
+            
             for (var j = 0; j < navItems.length; j++) {
                 var item = navItems[j];
                 var itemText = item.textContent.trim().toLowerCase();
-                var isActive = 
-                    (tab === 'all' && itemText === 'все') ||
-                    (tab === 'auction' && itemText === 'аукционы') ||
-                    (tab === 'my' && itemText === 'мои') ||
-                    (tab === 'profile' && itemText === 'профиль');
-                if (isActive) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
+                navItems[j].classList.toggle('active', itemText === tabNames[tab]);
             }
             
             renderCurrentTab();
         }
 
         // ============================================================
-        // ACTIONS
+        // VIEW CHANNEL
         // ============================================================
 
         function viewChannel(channelId) {
@@ -1031,7 +1715,8 @@
                 '<strong>' + channel.title + '</strong><br>' +
                 '@' + channel.username + '<br>' +
                 '💰 Цена: <strong>' + channel.price + ' ⭐</strong><br>' +
-                sellerInfo;
+                sellerInfo + '<br><br>' +
+                '⚠️ После покупки нужно подтвердить передачу канала.';
             
             document.getElementById('buyModal').classList.add('active');
         }
@@ -1049,13 +1734,13 @@
                     method: 'POST'
                 });
                 
-                showToast('✅ Канал успешно куплен!');
+                showToast('✅ Канал куплен! Ожидайте передачи.', 5000);
                 closeBuyModal();
                 await loadData();
                 
                 setTimeout(function() {
-                    openBot();
-                }, 1500);
+                    openTransferModal(result.deal_id);
+                }, 1000);
                 
             } catch (error) {
                 showToast('❌ ' + error.message);
@@ -1103,9 +1788,77 @@
                     body: JSON.stringify({ amount: amount })
                 });
                 
-                showToast('✅ Ставка ' + amount + ' ⭐ принята!');
+                showToast('✅ Ставка ' + amount + ' ⭐ принята! Вы лидируете.', 3000);
                 closeBidModal();
                 await loadData();
+                
+            } catch (error) {
+                showToast('❌ ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // TRANSFER MODAL
+        // ============================================================
+
+        function openTransferModal(dealId) {
+            currentDealId = dealId;
+            
+            document.getElementById('transferInfo').innerHTML = 
+                '📦 <strong>Сделка #' + dealId + '</strong><br><br>' +
+                'Ожидайте, пока продавец передаст вам канал.<br>' +
+                'После получения нажмите "Подтвердить передачу".<br><br>' +
+                '⚠️ Время на передачу: <strong>24 часа</strong>';
+            
+            document.getElementById('transferModal').classList.add('active');
+        }
+
+        function closeTransferModal() {
+            document.getElementById('transferModal').classList.remove('active');
+            currentDealId = null;
+        }
+
+        async function checkTransfer(dealId) {
+            try {
+                var result = await apiCall('/api/check_transfer/' + dealId);
+                
+                if (result.status === 'completed') {
+                    showToast('✅ Сделка уже завершена!', 3000);
+                    await loadData();
+                    return;
+                }
+                
+                if (result.status === 'waiting') {
+                    openTransferModal(dealId);
+                    showToast('⏳ Ожидайте передачи канала', 3000);
+                }
+                
+            } catch (error) {
+                showToast('❌ ' + error.message);
+            }
+        }
+
+        async function confirmTransfer() {
+            if (!currentDealId) {
+                showToast('❌ Неизвестная сделка');
+                return;
+            }
+            
+            try {
+                var result = await apiCall('/api/confirm_transfer', {
+                    method: 'POST',
+                    body: JSON.stringify({ deal_id: currentDealId })
+                });
+                
+                if (result.status === 'completed') {
+                    showToast('✅ Сделка завершена! Средства переведены.', 5000);
+                    closeTransferModal();
+                    await loadData();
+                    
+                    setTimeout(function() {
+                        switchTab('profile');
+                    }, 1500);
+                }
                 
             } catch (error) {
                 showToast('❌ ' + error.message);
@@ -1129,23 +1882,40 @@
         // ============================================================
 
         console.log('🌟 Username Market');
-        console.log('📡 API URL:', API_URL);
-        console.log('🤖 Bot:', BOT_URL);
+        console.log('📡 API URL:', getApiUrl());
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var select = document.getElementById('serverSelect');
+            var currentUrl = getApiUrl();
+            for (var i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === currentUrl) {
+                    select.options[i].selected = true;
+                    break;
+                }
+            }
+        });
 
         (async function init() {
             try {
-                var token = await getToken();
+                var token = localStorage.getItem('token');
+                if (!token) {
+                    token = await autoAuth();
+                }
+                
                 if (token) {
-                    console.log('✅ Token получен');
+                    console.log('✅ Авторизация успешна');
                     await loadData();
+                    
+                    if (userData) {
+                        var name = userData.username ? '@' + userData.username : 'Пользователь';
+                        showToast('👋 Добро пожаловать, ' + name + '!', 2000);
+                    }
                 } else {
                     document.getElementById('channelList').innerHTML = `
                         <div class="empty-state">
                             <div class="icon">🔑</div>
                             <div class="title">Требуется авторизация</div>
-                            <div style="font-size:14px; color:#8899aa;">
-                                Пожалуйста, войдите в аккаунт
-                            </div>
+                            <div class="subtitle">Пожалуйста, войдите в аккаунт</div>
                             <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
                         </div>
                     `;
@@ -1156,10 +1926,9 @@
             }
         })();
 
+        // Автообновление каждые 30 секунд
         setInterval(function() {
-            if (currentTab !== 'profile') {
-                loadData();
-            } else {
+            if (currentTab === 'profile' || currentTab === 'deals') {
                 (async function() {
                     try {
                         var [balanceData, userInfo] = await Promise.all([
@@ -1167,21 +1936,29 @@
                             apiCall('/api/user/me')
                         ]);
                         userData = userInfo.data || null;
+                        pendingDeals = userData?.pending_deals || [];
                         updateBalance(balanceData.balance || 0);
-                        if (currentTab === 'profile') {
-                            renderProfile();
-                        }
+                        updateDealBadge();
+                        if (currentTab === 'profile') renderProfile();
+                        else if (currentTab === 'deals') renderDeals();
                     } catch(e) {}
                 })();
+            } else {
+                loadData();
             }
         }, 30000);
 
+        // Закрываем модалки по клику вне
         document.getElementById('bidModal').addEventListener('click', function(e) {
             if (e.target === this) closeBidModal();
         });
         
         document.getElementById('buyModal').addEventListener('click', function(e) {
             if (e.target === this) closeBuyModal();
+        });
+        
+        document.getElementById('transferModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTransferModal();
         });
     </script>
 </body>
