@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Username Market</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 12px;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 4px 16px 4px;
+            border-bottom: 1px solid #2a2a3e;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-balance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #14141c;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #2a2a3e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header-balance:hover {
+            border-color: #6c5ce7;
+        }
+
+        .star { color: #fdcb6e; }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            background: #14141c;
+            border-radius: 10px;
+            padding: 4px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 60px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #8899aa;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #6c5ce7;
+            color: #fff;
+        }
+
+        .tab-btn:not(.active):hover {
+            background: #1c1c2e;
+            color: #ffffff;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: #14141c;
+            border-radius: 10px;
+            padding: 12px 14px;
+            border: 1px solid #2a2a3e;
+        }
+
+        .stat-card .label {
+            font-size: 11px;
+            color: #8899aa;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .stat-card .value.accent { color: #6c5ce7; }
+        .stat-card .value.success { color: #00b894; }
+        .stat-card .value.warning { color: #fdcb6e; }
+        .stat-card .value.danger { color: #ff6b6b; }
+
+        .channel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .channel-card {
+            background: #14141c;
+            border-radius: 10px;
+            padding: 14px 16px;
+            border: 1px solid #2a2a3e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .channel-card:active { transform: scale(0.98); }
+
+        .channel-card .title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .channel-card .username {
+            font-size: 13px;
+            color: #8899aa;
+            margin-bottom: 6px;
+        }
+
+        .channel-card .meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #8899aa;
+            flex-wrap: wrap;
+        }
+
+        .channel-card .meta .price {
+            color: #fdcb6e;
+            font-weight: 700;
+        }
+
+        .badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge.fixed { background: rgba(0, 184, 148, 0.2); color: #00b894; }
+        .badge.auction { background: rgba(253, 203, 110, 0.2); color: #fdcb6e; }
+        .badge.sold { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        .badge.waiting { background: rgba(108, 92, 231, 0.2); color: #6c5ce7; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8899aa;
+        }
+
+        .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+        .empty-state .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #14141c;
+            border-top: 1px solid #2a2a3e;
+            display: flex;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            border: none;
+            background: transparent;
+            color: #8899aa;
+            font-size: 10px;
+            padding: 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item .nav-icon { font-size: 22px; }
+        .nav-item.active { color: #6c5ce7; }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #2a2a3e;
+            border-top-color: #6c5ce7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1c1c2e;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid #2a2a3e;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            max-width: 90%;
+        }
+
+        .toast.show { opacity: 1; }
+
+        .refresh-btn {
+            background: #14141c;
+            border: 1px solid #2a2a3e;
+            color: #8899aa;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .refresh-btn:active { transform: scale(0.95); }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .retry-btn {
+            margin-top: 12px;
+            padding: 10px 24px;
+            background: #6c5ce7;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .retry-btn:active { transform: scale(0.95); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: #14141c;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid #2a2a3e;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #2a2a3e;
+            background: #1c1c2e;
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-buttons button:active { transform: scale(0.95); }
+
+        .btn-primary { background: #6c5ce7; color: #fff; }
+        .btn-secondary { background: #1c1c2e; color: #8899aa; }
+        .btn-success { background: #00b894; color: #fff; }
+        .btn-danger { background: #ff6b6b; color: #fff; }
+
+        .bid-info-text {
+            color: #8899aa;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .bid-info-text strong { color: #ffffff; }
+
+        /* Profile styles */
+        .profile-card {
+            background: #14141c;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #2a2a3e;
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-username {
+            font-size: 14px;
+            color: #8899aa;
+            margin-bottom: 12px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .profile-stat {
+            background: #1c1c2e;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .profile-stat .value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .profile-stat .label {
+            font-size: 11px;
+            color: #8899aa;
+        }
+
+        .profile-stat .value.accent { color: #6c5ce7; }
+        .profile-stat .value.success { color: #00b894; }
+        .profile-stat .value.warning { color: #fdcb6e; }
+        .profile-stat .value.danger { color: #ff6b6b; }
+
+        .balance-big {
+            background: linear-gradient(135deg, #1c1c2e, #2a2a3e);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            text-align: center;
+            border: 1px solid #6c5ce7;
+        }
+
+        .balance-big .amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fdcb6e;
+        }
+
+        .balance-big .label {
+            font-size: 14px;
+            color: #8899aa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="header">
+        <div class="header-title">🌟 Username Market</div>
+        <div class="header-actions">
+            <button class="refresh-btn" onclick="loadData()">⟳</button>
+            <div class="header-balance" onclick="switchTab('profile')">
+                <span class="star">⭐</span>
+                <span id="balanceDisplay">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">Все</button>
+        <button class="tab-btn" data-tab="fixed" onclick="switchTab('fixed')">📢 Фикс</button>
+        <button class="tab-btn" data-tab="auction" onclick="switchTab('auction')">🔨 Аукционы</button>
+        <button class="tab-btn" data-tab="my" onclick="switchTab('my')">👤 Мои</button>
+        <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">📋 Профиль</button>
+    </div>
+
+    <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+            <div class="label">Всего</div>
+            <div class="value accent" id="totalCount">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Аукционов</div>
+            <div class="value warning" id="auctionCount">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Фикс</div>
+            <div class="value success" id="fixedCount">0</div>
+        </div>
+    </div>
+
+    <div id="channelList">
+        <div class="loading"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Modal для ставки -->
+    <div class="modal-overlay" id="bidModal">
+        <div class="modal">
+            <div class="modal-title">🔨 Сделать ставку</div>
+            <div class="bid-info-text" id="bidInfo"></div>
+            <input type="number" id="bidAmount" placeholder="Введите сумму ставки" min="1">
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeBidModal()">Отмена</button>
+                <button class="btn-primary" onclick="submitBid()">Сделать ставку</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal для покупки -->
+    <div class="modal-overlay" id="buyModal">
+        <div class="modal">
+            <div class="modal-title">📢 Подтверждение покупки</div>
+            <div class="bid-info-text" id="buyInfo"></div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeBuyModal()">Отмена</button>
+                <button class="btn-success" onclick="confirmBuy()">Купить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('all')">
+            <span class="nav-icon">📊</span>
+            <span>Все</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('auction')">
+            <span class="nav-icon">🔨</span>
+            <span>Аукционы</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('my')">
+            <span class="nav-icon">👤</span>
+            <span>Мои</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('profile')">
+            <span class="nav-icon">📋</span>
+            <span>Профиль</span>
+        </button>
+        <button class="nav-item" onclick="openBot()">
+            <span class="nav-icon">🤖</span>
+            <span>Бот</span>
+        </button>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONFIG
+        // ============================================================
+
+        const API_URL = 'http://localhost:8080';
+        const BOT_USERNAME = 'UsernameSalerobot';
+        const BOT_URL = 'https://t.me/' + BOT_USERNAME;
+        
+        let currentChannelId = null;
+        let currentTab = 'all';
+        let channels = [];
+        let myChannels = [];
+        let userData = null;
+        let myUserId = null;
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+
+        let toastTimeout;
+
+        function showToast(message) {
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================================
+        // AUTH - ГЕНЕРАЦИЯ ТОКЕНА
+        // ============================================================
+
+        async function getToken() {
+            var token = localStorage.getItem('token');
+            if (token) {
+                return token;
+            }
+
+            var tg = window.Telegram?.WebApp;
+            var user_id = null;
+            var username = null;
+            
+            if (tg && tg.initDataUnsafe?.user) {
+                user_id = tg.initDataUnsafe.user.id;
+                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
+            } else {
+                var input = prompt('Введите ваш Telegram ID:');
+                if (input) {
+                    user_id = parseInt(input);
+                } else {
+                    user_id = 8102526978;
+                    showToast('⚠️ Используется тестовый ID: ' + user_id);
+                }
+            }
+
+            if (!user_id) {
+                showToast('❌ Не удалось определить пользователя');
+                return null;
+            }
+
+            try {
+                var response = await fetch(API_URL + '/api/generate_token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        user_id: user_id,
+                        username: username 
+                    })
+                });
+                
+                var data = await response.json();
+                
+                if (data.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user_id', data.user_id);
+                    myUserId = data.user_id;
+                    showToast('✅ Авторизация выполнена');
+                    return data.token;
+                } else {
+                    showToast('❌ Ошибка авторизации: ' + data.error);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                showToast('❌ Ошибка подключения к серверу');
+                return null;
+            }
+        }
+
+        // ============================================================
+        // API CALLS
+        // ============================================================
+
+        async function apiCall(endpoint, options) {
+            options = options || {};
+            
+            var token = localStorage.getItem('token');
+            if (!token) {
+                token = await getToken();
+                if (!token) {
+                    throw new Error('Не удалось авторизоваться');
+                }
+            }
+            
+            var url = API_URL + endpoint;
+            
+            try {
+                var response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token,
+                        ...(options.headers || {})
+                    }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    token = await getToken();
+                    if (!token) {
+                        throw new Error('Ошибка авторизации');
+                    }
+                    
+                    response = await fetch(url, {
+                        ...options,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token,
+                            ...(options.headers || {})
+                        }
+                    });
+                }
+                
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                }
+                
+                var data = await response.json();
+                
+                if (!data.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                showToast('❌ ' + error.message);
+                throw error;
+            }
+        }
+
+        // ============================================================
+        // LOAD DATA
+        // ============================================================
+
+        async function loadData() {
+            try {
+                var container = document.getElementById('channelList');
+                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                
+                var [channelsData, balanceData, userInfo] = await Promise.all([
+                    apiCall('/api/channels'),
+                    apiCall('/api/user/balance'),
+                    apiCall('/api/user/me')
+                ]);
+                
+                channels = channelsData.data || [];
+                userData = userInfo.data || null;
+                updateBalance(balanceData.balance || 0);
+                updateStats();
+                
+                if (currentTab === 'profile') {
+                    renderProfile();
+                } else {
+                    renderCurrentTab();
+                }
+                
+            } catch (error) {
+                document.getElementById('channelList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚠️</div>
+                        <div class="title">Ошибка загрузки</div>
+                        <div style="font-size:14px; color:#8899aa;">
+                            ${error.message || 'Не удалось подключиться к API'}
+                        </div>
+                        <button class="retry-btn" onclick="loadData()">🔄 Обновить</button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadMyChannels() {
+            try {
+                var data = await apiCall('/api/my/channels');
+                myChannels = data.data || [];
+                if (currentTab === 'my') {
+                    renderMyChannels();
+                }
+            } catch (error) {
+                myChannels = [];
+                if (currentTab === 'my') {
+                    renderMyChannels();
+                }
+            }
+        }
+
+        // ============================================================
+        // RENDER PROFILE
+        // ============================================================
+
+        function renderProfile() {
+            var container = document.getElementById('channelList');
+            
+            if (!userData) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">👤</div>
+                        <div class="title">Профиль не найден</div>
+                        <div style="font-size:14px; color:#8899aa;">
+                            Попробуйте обновить страницу
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            var username = userData.username || 'не указан';
+            var displayName = userData.username ? '@' + userData.username : 'Пользователь';
+            var firstLetter = displayName.charAt(1) || 'U';
+            
+            var html = `
+                <div class="profile-card">
+                    <div class="profile-avatar">${firstLetter.toUpperCase()}</div>
+                    <div class="profile-name">${displayName}</div>
+                    <div class="profile-username">🆔 ID: ${userData.id}</div>
+                    
+                    <div class="balance-big">
+                        <div class="label">⭐ Баланс</div>
+                        <div class="amount">${userData.balance}</div>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="value accent">${userData.total_bought || 0}</div>
+                            <div class="label">📥 Куплено</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value success">${userData.total_sold || 0}</div>
+                            <div class="label">📤 Продано</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value warning">${userData.total_spent || 0}</div>
+                            <div class="label">💸 Потрачено</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value accent">${userData.channels_count || 0}</div>
+                            <div class="label">📢 Каналов</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value success">${userData.deals_bought_count || 0}</div>
+                            <div class="label">📥 Сделок куплено</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value warning">${userData.deals_sold_count || 0}</div>
+                            <div class="label">📤 Сделок продано</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <button onclick="switchTab('my')" style="flex:1; padding: 10px; background: #6c5ce7; border: none; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer;">
+                            📢 Мои каналы
+                        </button>
+                        <button onclick="openBot()" style="flex:1; padding: 10px; background: #14141c; border: 1px solid #2a2a3e; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer;">
+                            🤖 Бот
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="font-size: 12px; color: #556677; text-align: center; padding: 8px;">
+                    🕐 Дата регистрации: ${new Date(userData.created_at * 1000).toLocaleDateString()}
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // RENDER CHANNELS
+        // ============================================================
+
+        function updateStats() {
+            var total = channels.length;
+            var auctions = 0;
+            var fixed = 0;
+            
+            for (var i = 0; i < channels.length; i++) {
+                if (channels[i].is_auction === 1) {
+                    auctions++;
+                } else {
+                    fixed++;
+                }
+            }
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('auctionCount').textContent = auctions;
+            document.getElementById('fixedCount').textContent = fixed;
+        }
+
+        function updateBalance(balance) {
+            document.getElementById('balanceDisplay').textContent = balance;
+        }
+
+        function renderChannels(channelsList, title) {
+            title = title || '';
+            var container = document.getElementById('channelList');
+
+            if (!channelsList || channelsList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <div class="title">${title || 'Нет каналов'}</div>
+                        <div style="font-size:14px; color:#8899aa;">
+                            ${currentTab === 'my' ? 'Выставьте канал через бота' : 'Попробуйте обновить позже'}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            var html = '<div class="channel-list">';
+            
+            for (var i = 0; i < channelsList.length; i++) {
+                var channel = channelsList[i];
+                var isAuction = channel.is_auction === 1;
+                var statusBadge = '';
+                
+                if (channel.status === 'sold') {
+                    statusBadge = '<span class="badge sold">✅ Продано</span>';
+                } else if (channel.status === 'waiting_transfer') {
+                    statusBadge = '<span class="badge waiting">⏳ Ожидает</span>';
+                }
+                
+                var bidInfo = '';
+                if (isAuction && channel.auction_current_bid && channel.status === 'active') {
+                    bidInfo = `
+                        <div class="bid-info">
+                            💰 Текущая ставка: <strong>${channel.auction_current_bid} ⭐</strong>
+                            ${channel.bidder_username ? '• 👤 @' + channel.bidder_username : ''}
+                        </div>
+                    `;
+                }
+
+                var badgeClass = isAuction ? 'auction' : 'fixed';
+                var badgeText = isAuction ? '🔨 Аукцион' : '📢 Фикс';
+                var priceDisplay = isAuction && channel.auction_current_bid && channel.status === 'active'
+                    ? channel.auction_current_bid 
+                    : channel.price;
+
+                html += `
+                    <div class="channel-card" onclick="${channel.status === 'active' ? 'viewChannel(' + channel.id + ')' : ''}">
+                        <div class="title">${channel.title}</div>
+                        <div class="username">@${channel.username}</div>
+                        <div class="meta">
+                            <span class="price">⭐ ${priceDisplay}</span>
+                            <span class="badge ${badgeClass}">${badgeText}</span>
+                            ${statusBadge}
+                            ${channel.seller_username ? '<span style="color:#8899aa;font-size:11px;">👤 @' + channel.seller_username + '</span>' : ''}
+                        </div>
+                        ${bidInfo}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderMyChannels() {
+            renderChannels(myChannels, 'Вы не выставили ни одного канала');
+        }
+
+        function renderCurrentTab() {
+            document.getElementById('statsRow').style.display = currentTab === 'profile' ? 'none' : 'grid';
+            
+            if (currentTab === 'profile') {
+                renderProfile();
+                return;
+            }
+            
+            if (currentTab === 'all') {
+                renderChannels(channels, 'Нет активных каналов');
+            } else if (currentTab === 'fixed') {
+                var fixedChannels = [];
+                for (var i = 0; i < channels.length; i++) {
+                    if (channels[i].is_auction === 0 && channels[i].status === 'active') {
+                        fixedChannels.push(channels[i]);
+                    }
+                }
+                renderChannels(fixedChannels, 'Нет каналов с фиксированной ценой');
+            } else if (currentTab === 'auction') {
+                var auctionChannels = [];
+                for (var i = 0; i < channels.length; i++) {
+                    if (channels[i].is_auction === 1 && channels[i].status === 'active') {
+                        auctionChannels.push(channels[i]);
+                    }
+                }
+                renderChannels(auctionChannels, 'Нет активных аукционов');
+            } else if (currentTab === 'my') {
+                loadMyChannels();
+            }
+        }
+
+        // ============================================================
+        // TAB SWITCHING
+        // ============================================================
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            var tabBtns = document.querySelectorAll('.tab-btn');
+            for (var i = 0; i < tabBtns.length; i++) {
+                var btn = tabBtns[i];
+                if (btn.dataset.tab === tab) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            }
+            
+            var navItems = document.querySelectorAll('.nav-item');
+            for (var j = 0; j < navItems.length; j++) {
+                var item = navItems[j];
+                var itemText = item.textContent.trim().toLowerCase();
+                var isActive = 
+                    (tab === 'all' && itemText === 'все') ||
+                    (tab === 'auction' && itemText === 'аукционы') ||
+                    (tab === 'my' && itemText === 'мои') ||
+                    (tab === 'profile' && itemText === 'профиль');
+                if (isActive) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            }
+            
+            renderCurrentTab();
+        }
+
+        // ============================================================
+        // ACTIONS
+        // ============================================================
+
+        function viewChannel(channelId) {
+            var channel = null;
+            for (var i = 0; i < channels.length; i++) {
+                if (channels[i].id === channelId) {
+                    channel = channels[i];
+                    break;
+                }
+            }
+            
+            if (!channel) {
+                showToast('❌ Канал не найден');
+                return;
+            }
+
+            if (channel.is_auction === 1) {
+                openBidModal(channel);
+            } else {
+                openBuyModal(channel);
+            }
+        }
+
+        // ============================================================
+        // BUY MODAL
+        // ============================================================
+
+        function openBuyModal(channel) {
+            currentChannelId = channel.id;
+            
+            var sellerInfo = channel.seller_username ? '👤 Продавец: @' + channel.seller_username : '';
+            
+            document.getElementById('buyInfo').innerHTML = 
+                '<strong>' + channel.title + '</strong><br>' +
+                '@' + channel.username + '<br>' +
+                '💰 Цена: <strong>' + channel.price + ' ⭐</strong><br>' +
+                sellerInfo;
+            
+            document.getElementById('buyModal').classList.add('active');
+        }
+
+        function closeBuyModal() {
+            document.getElementById('buyModal').classList.remove('active');
+            currentChannelId = null;
+        }
+
+        async function confirmBuy() {
+            if (!currentChannelId) return;
+            
+            try {
+                var result = await apiCall('/api/buy/' + currentChannelId, {
+                    method: 'POST'
+                });
+                
+                showToast('✅ Канал успешно куплен!');
+                closeBuyModal();
+                await loadData();
+                
+                setTimeout(function() {
+                    openBot();
+                }, 1500);
+                
+            } catch (error) {
+                showToast('❌ ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // BID MODAL
+        // ============================================================
+
+        function openBidModal(channel) {
+            currentChannelId = channel.id;
+            
+            var currentBid = channel.auction_current_bid || channel.price || 0;
+            var minBid = currentBid + 1;
+            
+            document.getElementById('bidInfo').innerHTML = 
+                '<strong>' + channel.title + '</strong><br>' +
+                '@' + channel.username + '<br>' +
+                '💰 Текущая ставка: <strong>' + currentBid + ' ⭐</strong><br>' +
+                '📈 Минимальная ставка: <strong>' + minBid + ' ⭐</strong>';
+            
+            document.getElementById('bidAmount').value = minBid;
+            document.getElementById('bidAmount').min = minBid;
+            document.getElementById('bidModal').classList.add('active');
+        }
+
+        function closeBidModal() {
+            document.getElementById('bidModal').classList.remove('active');
+            currentChannelId = null;
+        }
+
+        async function submitBid() {
+            if (!currentChannelId) return;
+            
+            var amount = parseInt(document.getElementById('bidAmount').value);
+            if (!amount || amount <= 0) {
+                showToast('❌ Введите корректную сумму');
+                return;
+            }
+            
+            try {
+                var result = await apiCall('/api/bid/' + currentChannelId, {
+                    method: 'POST',
+                    body: JSON.stringify({ amount: amount })
+                });
+                
+                showToast('✅ Ставка ' + amount + ' ⭐ принята!');
+                closeBidModal();
+                await loadData();
+                
+            } catch (error) {
+                showToast('❌ ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // OPEN BOT
+        // ============================================================
+
+        function openBot() {
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(BOT_URL);
+            } else {
+                window.open(BOT_URL, '_blank');
+            }
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+
+        console.log('🌟 Username Market');
+        console.log('📡 API URL:', API_URL);
+        console.log('🤖 Bot:', BOT_URL);
+
+        (async function init() {
+            try {
+                var token = await getToken();
+                if (token) {
+                    console.log('✅ Token получен');
+                    await loadData();
+                } else {
+                    document.getElementById('channelList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">🔑</div>
+                            <div class="title">Требуется авторизация</div>
+                            <div style="font-size:14px; color:#8899aa;">
+                                Пожалуйста, войдите в аккаунт
+                            </div>
+                            <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Init error:', error);
+                showToast('❌ Ошибка инициализации');
+            }
+        })();
+
+        setInterval(function() {
+            if (currentTab !== 'profile') {
+                loadData();
+            } else {
+                (async function() {
+                    try {
+                        var [balanceData, userInfo] = await Promise.all([
+                            apiCall('/api/user/balance'),
+                            apiCall('/api/user/me')
+                        ]);
+                        userData = userInfo.data || null;
+                        updateBalance(balanceData.balance || 0);
+                        if (currentTab === 'profile') {
+                            renderProfile();
+                        }
+                    } catch(e) {}
+                })();
+            }
+        }, 30000);
+
+        document.getElementById('bidModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBidModal();
+        });
+        
+        document.getElementById('buyModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBuyModal();
+        });
+    </script>
+</body>
+</html>
