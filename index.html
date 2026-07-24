@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Username Market</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
            ROOT VARIABLES
@@ -51,7 +51,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Скрываем скроллбар */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -75,7 +74,7 @@
         }
 
         .header-logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
             background: linear-gradient(135deg, var(--accent), #a29bfe);
             -webkit-background-clip: text;
@@ -84,7 +83,7 @@
         }
 
         .header-logo-sub {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-secondary);
             font-weight: 600;
             -webkit-text-fill-color: var(--text-secondary);
@@ -118,13 +117,8 @@
             box-shadow: var(--shadow-glow);
         }
 
-        .header-balance .star {
-            font-size: 16px;
-        }
-
-        .header-balance .amount {
-            color: var(--warning);
-        }
+        .header-balance .star { font-size: 16px; }
+        .header-balance .amount { color: var(--warning); }
 
         .header-balance .badge {
             position: absolute;
@@ -183,6 +177,7 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238899aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
+            font-family: 'Inter', sans-serif;
         }
 
         .server-selector:focus {
@@ -691,7 +686,7 @@
         }
 
         /* ============================================================
-           PROFILE
+           PROFILE - УЛУЧШЕННЫЙ
            ============================================================ */
         .profile-card {
             background: var(--bg-secondary);
@@ -701,31 +696,50 @@
             margin-bottom: 16px;
         }
 
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
         .profile-avatar {
             width: 72px;
             height: 72px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #a29bfe);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
             font-weight: 800;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 20px var(--accent-glow);
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-info {
+            flex: 1;
         }
 
         .profile-name {
             font-size: 22px;
             font-weight: 800;
-            margin-bottom: 4px;
             letter-spacing: -0.5px;
         }
 
         .profile-username {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 16px;
+        }
+
+        .profile-id {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: monospace;
         }
 
         .balance-big {
@@ -824,6 +838,25 @@
             color: var(--text-primary);
         }
 
+        .active-deals-banner {
+            margin-top: 16px;
+            padding: 14px;
+            background: #1a1a2e;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--warning);
+        }
+
+        .active-deals-banner .title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .active-deals-banner .count {
+            color: var(--warning);
+            font-weight: 800;
+            font-size: 18px;
+        }
+
         /* ============================================================
            DEALS
            ============================================================ */
@@ -883,8 +916,18 @@
 
         .deal-card .deal-actions button:active { transform: scale(0.95); }
 
+        .deal-timer {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(253, 203, 110, 0.15);
+            color: var(--warning);
+        }
+
         /* ============================================================
-           RESPONSIVE - ДЛЯ ТЕЛЕФОНОВ
+           RESPONSIVE
            ============================================================ */
         @media (max-width: 480px) {
             body { padding: 12px; padding-bottom: 80px; }
@@ -920,19 +963,15 @@
             .bottom-nav { padding: 4px 0; }
             .nav-item .nav-icon { font-size: 18px; }
             .nav-item { font-size: 8px; }
+
+            .profile-header { flex-direction: column; text-align: center; }
         }
 
-        /* ============================================================
-           RESPONSIVE - ДЛЯ ПЛАНШЕТОВ
-           ============================================================ */
         @media (min-width: 481px) and (max-width: 768px) {
             .profile-stats { grid-template-columns: repeat(3, 1fr); }
             .stats-row { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* ============================================================
-           RESPONSIVE - ДЛЯ ПК
-           ============================================================ */
         @media (min-width: 769px) {
             body {
                 max-width: 800px;
@@ -952,6 +991,9 @@
             .tab-btn { padding: 12px 20px; font-size: 14px; }
             
             .modal { padding: 36px; max-width: 480px; }
+
+            .profile-header { gap: 24px; }
+            .profile-avatar { width: 88px; height: 88px; font-size: 38px; }
         }
     </style>
 </head>
@@ -1116,6 +1158,7 @@
         let userData = null;
         let myUserId = null;
         let pendingDeals = [];
+        let avatarData = null;
 
         // ============================================================
         // TOAST
@@ -1165,12 +1208,13 @@
                 last_name = tg.initDataUnsafe.user.last_name || null;
                 console.log('👤 Авторизация через Telegram:', user_id, username);
             } else {
+                // Для теста в браузере - запрашиваем ID
                 var input = prompt('👤 Введите ваш Telegram ID:');
                 if (input) {
                     user_id = parseInt(input);
                 } else {
+                    showToast('⚠️ Используется тестовый режим');
                     user_id = 8102526978;
-                    showToast('⚠️ Используется тестовый ID: ' + user_id);
                 }
             }
 
@@ -1197,6 +1241,11 @@
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user_id', data.user_id);
                     myUserId = data.user_id;
+                    
+                    if (data.user && data.user.avatar) {
+                        avatarData = data.user.avatar;
+                    }
+                    
                     showToast('✅ Авторизация выполнена для ID: ' + user_id);
                     return data.token;
                 } else {
@@ -1328,6 +1377,11 @@
                 channels = channelsData.data || [];
                 userData = userInfo.data || null;
                 pendingDeals = userData?.pending_deals || [];
+                
+                if (userData && userData.avatar) {
+                    avatarData = userData.avatar;
+                }
+                
                 updateBalance(balanceData.balance || 0);
                 updateStats();
                 updateDealBadge();
@@ -1430,14 +1484,30 @@
                 return;
             }
 
-            var displayName = userData.username ? '@' + userData.username : 'Пользователь';
-            var firstLetter = displayName.charAt(1) || 'U';
+            var displayName = userData.username || 'Пользователь';
+            var avatarStyle = '';
+            var avatarLetter = 'U';
+            
+            if (avatarData) {
+                avatarStyle = `background: ${avatarData.background};`;
+                avatarLetter = avatarData.letter;
+            } else {
+                var colors = ['#6c5ce7', '#00b894', '#fdcb6e', '#ff6b6b', '#0984e3', '#e17055'];
+                var color = colors[userData.id % colors.length];
+                avatarStyle = `background: linear-gradient(135deg, ${color}, ${color}dd);`;
+                avatarLetter = (displayName || 'U')[0].toUpperCase();
+            }
             
             var html = `
                 <div class="profile-card">
-                    <div class="profile-avatar">${firstLetter.toUpperCase()}</div>
-                    <div class="profile-name">${displayName}</div>
-                    <div class="profile-username">🆔 ID: ${userData.id}</div>
+                    <div class="profile-header">
+                        <div class="profile-avatar" style="${avatarStyle}">${avatarLetter}</div>
+                        <div class="profile-info">
+                            <div class="profile-name">${displayName}</div>
+                            <div class="profile-username">🆔 ID: ${userData.id}</div>
+                            <div class="profile-id">📅 ${new Date(userData.created_at * 1000).toLocaleDateString()}</div>
+                        </div>
+                    </div>
                     
                     <div class="balance-big">
                         <div class="label">⭐ Баланс</div>
@@ -1472,8 +1542,9 @@
                     </div>
                     
                     ${pendingDeals.length > 0 ? `
-                        <div style="margin-top:16px; padding:14px; background:#1a1a2e; border-radius:var(--radius-sm); border-left:4px solid var(--warning);">
-                            <div style="font-weight:700;">📦 Активные сделки: ${pendingDeals.length}</div>
+                        <div class="active-deals-banner">
+                            <div class="title">📦 Активные сделки</div>
+                            <div>У вас <span class="count">${pendingDeals.length}</span> активных сделок</div>
                             <button onclick="switchTab('deals')" style="margin-top:8px; padding:8px 20px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">
                                 Перейти к сделкам →
                             </button>
@@ -1485,10 +1556,6 @@
                         <button class="btn-outline" onclick="switchTab('deals')">📦 Сделки</button>
                         <button class="btn-outline" onclick="openBot()" style="grid-column: span 2;">🤖 Открыть бота</button>
                     </div>
-                </div>
-                
-                <div style="text-align:center; font-size:12px; color:var(--text-muted); padding:8px;">
-                    🕐 Зарегистрирован: ${new Date(userData.created_at * 1000).toLocaleDateString()}
                 </div>
             `;
             
@@ -1520,15 +1587,24 @@
                 var timeLeft = DEAL_TIMEOUT - (Date.now() / 1000 - deal.paid_at);
                 var hoursLeft = Math.floor(timeLeft / 3600);
                 var minutesLeft = Math.floor((timeLeft % 3600) / 60);
+                var timeText = '';
+                
+                if (hoursLeft > 0) {
+                    timeText = hoursLeft + 'ч ' + minutesLeft + 'м';
+                } else {
+                    timeText = minutesLeft + 'м';
+                }
                 
                 html += `
                     <div class="deal-card">
                         <div class="deal-title">${deal.title || 'Канал'}</div>
                         <div class="deal-info">@${deal.username || 'username'} • 💰 ${deal.price} ⭐</div>
-                        <div class="deal-info">🕐 Осталось: ${hoursLeft > 0 ? hoursLeft + 'ч ' : ''}${minutesLeft}м</div>
+                        <div class="deal-info">
+                            <span class="deal-timer">⏰ ${timeText}</span>
+                        </div>
                         <div class="deal-status status-waiting">⏳ Ожидает передачи</div>
                         <div class="deal-actions">
-                            <button class="btn-primary" onclick="checkTransfer(${deal.id})">🔍 Проверить</button>
+                            <button class="btn-primary" onclick="checkTransfer(${deal.id})">🔍 Проверить передачу</button>
                         </div>
                     </div>
                 `;
@@ -1572,10 +1648,19 @@
                 
                 var bidInfo = '';
                 if (isAuction && channel.auction_current_bid && channel.status === 'active') {
+                    var timeLeft = channel.time_left || 0;
+                    var days = Math.floor(timeLeft / 86400);
+                    var hours = Math.floor((timeLeft % 86400) / 3600);
+                    var timeText = '';
+                    if (days > 0) timeText = days + 'д ';
+                    if (hours > 0) timeText += hours + 'ч';
+                    if (!timeText) timeText = 'Завершается';
+                    
                     bidInfo = `
                         <div class="bid-info">
                             💰 Текущая ставка: <strong>${channel.auction_current_bid} ⭐</strong>
                             ${channel.bidder_username ? '• 👤 @' + channel.bidder_username : ''}
+                            ${timeText ? '• ⏰ ' + timeText : ''}
                         </div>
                     `;
                 }
@@ -1716,7 +1801,8 @@
                 '@' + channel.username + '<br>' +
                 '💰 Цена: <strong>' + channel.price + ' ⭐</strong><br>' +
                 sellerInfo + '<br><br>' +
-                '⚠️ После покупки нужно подтвердить передачу канала.';
+                '⚠️ После покупки нужно подтвердить передачу канала.<br>' +
+                '📦 У вас есть <strong>24 часа</strong> на проверку.';
             
             document.getElementById('buyModal').classList.add('active');
         }
@@ -1761,7 +1847,8 @@
                 '<strong>' + channel.title + '</strong><br>' +
                 '@' + channel.username + '<br>' +
                 '💰 Текущая ставка: <strong>' + currentBid + ' ⭐</strong><br>' +
-                '📈 Минимальная ставка: <strong>' + minBid + ' ⭐</strong>';
+                '📈 Минимальная ставка: <strong>' + minBid + ' ⭐</strong><br><br>' +
+                '⚠️ Ставка блокируется до окончания аукциона.';
             
             document.getElementById('bidAmount').value = minBid;
             document.getElementById('bidAmount').min = minBid;
@@ -1806,9 +1893,11 @@
             
             document.getElementById('transferInfo').innerHTML = 
                 '📦 <strong>Сделка #' + dealId + '</strong><br><br>' +
-                'Ожидайте, пока продавец передаст вам канал.<br>' +
-                'После получения нажмите "Подтвердить передачу".<br><br>' +
-                '⚠️ Время на передачу: <strong>24 часа</strong>';
+                '✅ Оплата прошла успешно!<br>' +
+                '⏳ Ожидайте, пока продавец передаст вам канал.<br><br>' +
+                '📌 После получения канала нажмите кнопку "Подтвердить передачу".<br><br>' +
+                '⏰ Время на передачу: <strong>24 часа</strong><br>' +
+                '💡 Если продавец не передаст канал, деньги вернутся на баланс.';
             
             document.getElementById('transferModal').classList.add('active');
         }
@@ -1829,7 +1918,17 @@
                 }
                 
                 if (result.status === 'waiting') {
-                    openTransferModal(dealId);
+                    var timeLeft = result.time_left || 0;
+                    var hours = Math.floor(timeLeft / 3600);
+                    var minutes = Math.floor((timeLeft % 3600) / 60);
+                    
+                    document.getElementById('transferInfo').innerHTML = 
+                        '📦 <strong>Сделка #' + dealId + '</strong><br><br>' +
+                        '⏳ Ожидайте передачи канала.<br>' +
+                        '⏰ Осталось: <strong>' + hours + 'ч ' + minutes + 'м</strong><br><br>' +
+                        '📌 После получения канала нажмите "Подтвердить передачу".';
+                    
+                    document.getElementById('transferModal').classList.add('active');
                     showToast('⏳ Ожидайте передачи канала', 3000);
                 }
                 
@@ -1851,7 +1950,7 @@
                 });
                 
                 if (result.status === 'completed') {
-                    showToast('✅ Сделка завершена! Средства переведены.', 5000);
+                    showToast('✅ Сделка завершена! Средства переведены продавцу.', 5000);
                     closeTransferModal();
                     await loadData();
                     
@@ -1881,8 +1980,9 @@
         // INIT
         // ============================================================
 
-        console.log('🌟 Username Market');
+        console.log('🌟 Username Market - Release Version');
         console.log('📡 API URL:', getApiUrl());
+        console.log('🤖 Bot:', BOT_URL);
 
         document.addEventListener('DOMContentLoaded', function() {
             var select = document.getElementById('serverSelect');
@@ -1907,7 +2007,7 @@
                     await loadData();
                     
                     if (userData) {
-                        var name = userData.username ? '@' + userData.username : 'Пользователь';
+                        var name = userData.username || 'Пользователь';
                         showToast('👋 Добро пожаловать, ' + name + '!', 2000);
                     }
                 } else {
@@ -1937,6 +2037,11 @@
                         ]);
                         userData = userInfo.data || null;
                         pendingDeals = userData?.pending_deals || [];
+                        
+                        if (userData && userData.avatar) {
+                            avatarData = userData.avatar;
+                        }
+                        
                         updateBalance(balanceData.balance || 0);
                         updateDealBadge();
                         if (currentTab === 'profile') renderProfile();
